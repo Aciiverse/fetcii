@@ -64,6 +64,31 @@ router.get('/games', async (req: express.Request, res: express.Response) => {
 });
 
 /**
+ * @method creates a games (only handle)
+ * @param {string} "/games" the route
+ * @param {express.Request} req requested fields
+ * @param {express.Response} res Result
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.2024
+ */
+router.post('/games', (req: express.Request, res: express.Response) => {
+    const body: Game = req.body;
+
+    if (    !body.description || !body.developer || !body.developingLanguage
+        ||  !body.id || !body.release || !body.title) {
+        // -> fields not valid
+        return res.status(406).send({
+            message: 'Invalid data'
+        });
+    }
+
+    res.status(200).send({
+        message: 'Success'
+    });
+});
+
+/**
  * @async
  * @method gets the dummy database
  * @returns {Data | undefined} the dummy database
