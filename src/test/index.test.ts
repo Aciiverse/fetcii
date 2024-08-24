@@ -46,3 +46,32 @@ describe('getcii all games', () => {
         assert.equal(games.length, 20, 'all games founded');
     });
 });
+
+describe('getcii a single game', () => {
+    it('founded', async () => {
+        const   gameId = 1,
+                result = await getcii(`${baseUrl}/games/${gameId}`);
+
+        assert(!result.err, 'response is valid (!err)');
+        assert(result.response?.ok, 'response is valid (response.ok)');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+
+        const game: Game = data.data;
+
+        assert.equal(typeof game, 'object', 'single game founded');
+    });
+});
+
+describe('getcii NOT a single game', () => {
+    it('founded', async () => {
+        const   gameId = 22,
+                result = await getcii(`${baseUrl}/games/${gameId}`);
+
+        assert(result.err, 'response is valid (!err)');
+        assert(!result.response?.ok, 'response is valid (response.ok)');
+        assert(!result.data, 'data is undefined');
+        assert.equal(typeof result.err.message, 'string', 'error message is defined');
+    });
+});
