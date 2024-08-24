@@ -83,8 +83,53 @@ router.post('/games', (req: express.Request, res: express.Response) => {
         });
     }
 
-    res.status(200).send({
+    res.status(201).send({
         message: 'Success'
+    });
+});
+
+/**
+ * @method updates a games (only handle)
+ * @param {string} "/games" the route
+ * @param {express.Request} req requested fields
+ * @param {express.Response} res Result
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.2024
+ */
+router.put('/games', async (req: express.Request, res: express.Response) => {
+    const   body: Game = req.body,
+            data = await getData();
+
+    if (!data || !data.games) {
+        // -> dummy data not founded
+        return res.status(404).send({
+            message: 'No data founded'
+        });
+    }
+
+    const games = data.games;
+
+    if (    !body.description || !body.developer || !body.developingLanguage
+        ||  !body.id || !body.release || !body.title) {
+        // -> fields not valid
+        return res.status(406).send({
+            message: 'Invalid data'
+        });
+    }
+
+    const oldGame = games.find(e => e.id === body.id);
+
+    if (!oldGame) {
+        // -> old game not exists
+        return res.status(404).send({
+            message: 'Game not exists'
+        });
+    }
+
+    res.status(202).send({
+        message: 'Success',
+        data: body
     });
 });
 
