@@ -42,7 +42,7 @@ export interface FilterProperty {
 /**
  * @method gets the data by using the ```GET``` request
  * @param {string} url the url where you want to fetch from
- * @returns {Promise<Result>}
+ * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
@@ -127,7 +127,7 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
 /**
  * @method creates an entry by using the ```POST``` request
  * @param {string} url the url where you want to fetch from
- * @returns
+ * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
@@ -177,7 +177,7 @@ export async function createcii(url: string): Promise<Result> {
 /**
  * @method updates an entry by using the ```PUT``` request
  * @param {string} url the url where you want to fetch from
- * @returns
+ * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
@@ -227,7 +227,7 @@ export async function updatecii(url: string): Promise<Result> {
 /**
  * @method removes an entry by using the ```DELETE``` request
  * @param {string} url the url where you want to fetch from
- * @returns
+ * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
