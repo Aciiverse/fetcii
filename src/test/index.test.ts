@@ -7,6 +7,15 @@ interface BasicResponse {
     data?: any
 }
 
+interface Game {
+    id: string;
+    title: string;
+    description: string;
+    release: string;
+    developingLanguage: string;
+    developer: string;
+}
+
 const baseUrl = 'http://localhost:3000/api';
 
 describe('getcii dummy api started', () => {
@@ -17,7 +26,23 @@ describe('getcii dummy api started', () => {
         assert(result.response?.ok, 'response is valid (response.ok)');
         
         const data: BasicResponse = result.data;
-        assert(typeof data.message, 'response ');
-        assert(typeof data.message, 'result is valid');
+        assert(data.message, 'message is defined');
+        assert(!data.data, 'data is undefined');
+    });
+});
+
+describe('getcii all games', () => {
+    it('founded', async () => {
+        const result = await getcii(`${baseUrl}/games`);
+
+        assert(!result.err, 'response is valid (!err)');
+        assert(result.response?.ok, 'response is valid (response.ok)');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+
+        const games: Game[] = data.data;
+
+        assert.equal(games.length, 20, 'all games founded');
     });
 });
