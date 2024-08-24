@@ -5,7 +5,10 @@ export interface GetOptions {
 /**
  * @method gets the data by using the ```GET``` request
  * @param {string} url the url where you want to fetch from
- * @returns 
+ * @returns
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.24
  */
 export async function getcii(url: string, options?: GetOptions) {
     try {
@@ -38,7 +41,10 @@ export async function getcii(url: string, options?: GetOptions) {
 /**
  * @method creates an entry by using the ```POST``` request
  * @param {string} url the url where you want to fetch from
- * @returns 
+ * @returns
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.24
  */
 export async function createcii(url: string) {
     try {
@@ -71,7 +77,10 @@ export async function createcii(url: string) {
 /**
  * @method updates an entry by using the ```PUT``` request
  * @param {string} url the url where you want to fetch from
- * @returns 
+ * @returns
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.24
  */
 export async function updatecii(url: string) {
     try {
@@ -104,7 +113,10 @@ export async function updatecii(url: string) {
 /**
  * @method removes an entry by using the ```DELETE``` request
  * @param {string} url the url where you want to fetch from
- * @returns 
+ * @returns
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.24
  */
 export async function removecii(url: string) {
     try {

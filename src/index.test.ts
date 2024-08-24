@@ -29,6 +29,7 @@ describe('get data from api', () => {
  * @returns {Config | undefined} the config file
  * @author Flowtastisch
  * @memberof Aciiverse
+ * @date 24.08.24
  */
 function getConfig(): Config | undefined {
     try {
