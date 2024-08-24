@@ -64,6 +64,42 @@ router.get('/games', async (req: express.Request, res: express.Response) => {
 });
 
 /**
+ * @method geta a single game
+ * @param {string} "/games/:id" the route
+ * @param {express.Request} req requested fields
+ * @param {express.Response} res Result
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.2024
+ */
+router.get('/games/:id', async (req: express.Request, res: express.Response) => {
+    const   gameId  = req.params.id,
+            data    = await getData();
+
+    if (!data || !data.games) {
+        // -> dummy data not founded
+        return res.status(404).send({
+            message: 'No data founded'
+        });
+    }
+
+    const   games   = data.games,
+            game    = games.find(e => e.id === gameId);
+
+    if (!game) {
+        // -> old game not exists
+        return res.status(404).send({
+            message: 'Game not exists'
+        });
+    }
+
+    res.status(200).send({
+        message: 'Success',
+        data: game
+    });
+});
+
+/**
  * @method creates a games (only handle)
  * @param {string} "/games" the route
  * @param {express.Request} req requested fields
@@ -153,9 +189,8 @@ router.delete('/games/:id', async (req: express.Request, res: express.Response) 
         });
     }
 
-    const games = data.games;
-
-    const game = games.find(e => e.id === gameId);
+    const   games   = data.games,
+            game    = games.find(e => e.id === gameId);
 
     if (!game) {
         // -> game not exists
