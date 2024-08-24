@@ -1,6 +1,6 @@
 import assert = require("node:assert");
 import { describe, it } from "node:test";
-import { getcii } from "../../src";
+import { getcii } from "..";
 
 interface Config {
     url: string
@@ -15,12 +15,18 @@ describe('json is valid', () => {
     })
 });
 
-describe('get data from api', () => {
+describe('getcii data from api', () => {
     const config = getConfig();
 
-    it('should be 3', async () => {
+    it('have valid data', async () => {
         const result = await getcii(config?.url!);
-        assert(typeof result.message === 'string', 'result is valid')
+
+        assert(!result.err, 'response is valid (!err)');
+        assert(result.response?.ok, 'response is valid (response.ok)');
+
+        const data: { message: string } = result.data;
+        assert(typeof data.message, 'response ');
+        assert(typeof data.message, 'result is valid');
     });
 });
 
@@ -33,7 +39,7 @@ describe('get data from api', () => {
  */
 function getConfig(): Config | undefined {
     try {
-        const config: Config = require('../config.json');
+        const config: Config = require('../../config.json');
         return config
     } catch (err) {
         console.error(err)
