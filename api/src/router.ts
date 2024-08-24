@@ -134,6 +134,42 @@ router.put('/games', async (req: express.Request, res: express.Response) => {
 });
 
 /**
+ * @method deletes a games (only handle)
+ * @param {string} "/games/:id" the route
+ * @param {express.Request} req requested fields
+ * @param {express.Response} res Result
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.2024
+ */
+router.delete('/games/:id', async (req: express.Request, res: express.Response) => {
+    const   data    = await getData(),
+            gameId  = req.params.id;
+
+    if (!data || !data.games) {
+        // -> dummy data not founded
+        return res.status(404).send({
+            message: 'No data founded'
+        });
+    }
+
+    const games = data.games;
+
+    const game = games.find(e => e.id === gameId);
+
+    if (!game) {
+        // -> game not exists
+        return res.status(404).send({
+            message: 'Game not exists'
+        });
+    }
+
+    res.status(202).send({
+        message: 'Success'
+    });
+});
+
+/**
  * @async
  * @method gets the dummy database
  * @returns {Data | undefined} the dummy database
