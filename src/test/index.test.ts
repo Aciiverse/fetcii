@@ -1,6 +1,6 @@
 import assert = require("node:assert");
 import { describe, it } from "node:test";
-import { getcii } from ".";
+import { getcii } from "../../src";
 
 interface Config {
     url: string

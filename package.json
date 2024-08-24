@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Simple fetch module primary designed for the aciifx backend",
   "main": "dist/index.js",
-  "repository": "https://github.com/Aciiverse/fetcii.git",
+  "repository": {
+    "url": "https://github.com/Aciiverse/fetcii.git"
+  },
   "author": "Flowtastisch",
   "license": "MIT",
   "private": "false",
@@ -14,6 +16,11 @@
     "start": "node dist/index.js",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "test": "node --test"
-  }
+    "test": "tsc && node --test"
+  },
+  "files": [
+    "dist",
+    "!dist/test/",
+    "LICENCE"
+  ]
 }
