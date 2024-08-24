@@ -1,0 +1,24 @@
+{
+  "name": "fetcii",
+  "version": "1.0.0",
+  "description": "Simple fetch module primary designed for the aciifx backend",
+  "main": "dist/index.js",
+  "repository": "https://github.com/Aciiverse/fetcii.git",
+  "author": "Flowtastisch",
+  "license": "MIT",
+  "private": "false",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "start:dev": "concurrently \"npm run build:watch\" \"npm run sleep && node --watch dist/index.js\"",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "jest",
+    "sleep": "node -e \"setTimeout(() => process.exit(0), 2000)\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
