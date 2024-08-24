@@ -14,6 +14,34 @@ interface Data {
     games: Game[];
 }
 
+enum CompareOperator {
+    Equal           = 'eq',
+    NotEqual        = 'neq',
+    GreaterThan     = 'gt',
+    GreaterEqual    = 'ge',
+    LessThan        = 'lt',
+    LessEqual       = 'le',
+}
+
+interface Filter {
+    filter: {
+        property: string,
+        operator: CompareOperator,
+        value: any
+    } | Filter[],
+    and?: boolean
+}
+
+interface OrderBy {
+    property: string,
+    ascending?: boolean
+}
+
+interface QueryTopAndSkip {
+    top:    number,
+    skip:   number
+}
+
 /**
  * @method service status route
  * @param {string} "/" the route
@@ -49,12 +77,20 @@ router.get('/', (req: express.Request, res: express.Response) => {
  * @date 24.08.2024
  */
 router.get('/games', async (req: express.Request, res: express.Response) => {
-    const data = await getData();
+    const   data    = await getData(),
+            topSkip = getQueryTopSkip(req);
 
     if (!data) {
         return res.status(404).send({
             message: 'No data founded'
         });
+    }
+
+    const games = data?.games;
+
+    if (topSkip) {
+        games.splice(0, topSkip.skip);
+        games.length = topSkip.top;
     }
 
     res.status(200).send({
@@ -207,7 +243,7 @@ router.delete('/games/:id', async (req: express.Request, res: express.Response) 
 /**
  * @async
  * @method gets the dummy database
- * @returns {Data | undefined} the dummy database
+ * @returns {Promise<Data | undefined>} the dummy database
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.2024
@@ -221,6 +257,108 @@ async function getData(): Promise<Data | undefined> {
         return undefined;
     }
 
+}
+
+/**
+ * @async
+ * @method gets the query filter
+ * @param {express.Request} req the route request
+ * @returns {Promise<Filter | Filter[] | undefined>} the dummy database
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.2024
+ */
+async function getQueryFilters(req: express.Request): Promise<Filter | Filter[] | undefined> {
+    const filters = req.query.$filters;
+
+    if (    !filters
+        ||  typeof filters !== "string") return undefined;
+
+    try {
+        const parsed: Filter | Filter[] = await JSON.parse(filters);
+        return parsed;
+    } catch (err) {
+        return undefined;
+    }
+}
+
+/**
+ * @async
+ * @method gets the query top and skip
+ * @param {express.Request} req the route request
+ * @returns {QueryTopAndSkip | undefined} the dummy database
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.2024
+ */
+function getQueryTopSkip(req: express.Request): QueryTopAndSkip | undefined {
+    const   top     = parseInt(req.query.$top   as string),
+            skip    = parseInt(req.query.$skip  as string),
+            returnObj: QueryTopAndSkip = {
+                top:    0,
+                skip:   0
+            };
+
+    if (    isNaN(top)
+        ||  typeof top  !== "number"    ) return undefined;
+
+    returnObj.top = top;
+
+    if (!isNaN(skip) && typeof skip === "number") {
+        // -> skip is defined & valid
+        returnObj.skip = skip;
+    } else {
+        // -> skip undefined -> skip initially to 0
+        returnObj.skip = 0;
+    }
+
+    return returnObj;
+}
+
+/**
+ * @async
+ * @method gets the query orderBy
+ * @param {express.Request} req the route request
+ * @returns {Promise<OrderBy | OrderBy[] | undefined>} the dummy database
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.2024
+ */
+async function getQueryOrderBy(req: express.Request): Promise<OrderBy | OrderBy[] | undefined> {
+    const orderBy = req.query.$orderBy;
+
+    if (    !orderBy
+        ||  typeof orderBy !== "string" ) return undefined;
+
+    try {
+        const parsed: OrderBy | OrderBy[] = await JSON.parse(orderBy);
+        return parsed;
+    } catch (err) {
+        return undefined;
+    }
+}
+
+/**
+ * @async
+ * @method gets the query select
+ * @param {express.Request} req the route request
+ * @returns {Promise<string[] | undefined>} the dummy database
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 24.08.2024
+ */
+async function getQuerySelect(req: express.Request): Promise<string[] | undefined> {
+    const select = req.query.$select;
+
+    if (    !select
+        ||  typeof select !== "string"  ) return undefined;
+
+    try {
+        const parsed: string[] = await JSON.parse(select);
+        return parsed;
+    } catch (err) {
+        return undefined;
+    }
 }
 
 module.exports = router;

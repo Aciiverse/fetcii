@@ -16,7 +16,7 @@ export interface Filter {
     and?: boolean
 };
 
-export interface OderBy {
+export interface OrderBy {
     property: string,
     ascending?: boolean
 }
@@ -24,7 +24,7 @@ export interface OderBy {
 export interface GetOptions {
     filters?: Filter | Filter[],
     select?: string[],
-    orderBy?: OderBy | OderBy[],
+    orderBy?: OrderBy | OrderBy[],
     top?:   number,
     skip?:  number
 }
@@ -61,12 +61,12 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
     
             if (options.top) {
                 // -> top exists
-                queryParams.append('$top', JSON.stringify(options.top));
+                queryParams.append('$top', String(options.top));
             }
 
             if (options.top) {
                 // -> skip exists
-                queryParams.append('$skip', JSON.stringify(options.skip));
+                queryParams.append('$skip', String(options.skip));
             }
 
             if (options.orderBy) {
@@ -81,7 +81,7 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
     
             if (queryParams.size > 0) {
                 // -> queryParams exists -> add params to url
-                url = `${url}?${String(queryParams)}`;
+                url = `${url}/?${String(queryParams)}`;
             }
         }
 

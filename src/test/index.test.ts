@@ -47,6 +47,24 @@ describe('getcii all games', () => {
     });
 });
 
+describe('getcii 15 games', () => {
+    it('founded', async () => {
+        const result = await getcii(`${baseUrl}/games`, {
+            top: 15
+        });
+
+        assert(!result.err, 'response is valid (!err)');
+        assert(result.response?.ok, 'response is valid (response.ok)');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+
+        const games: Game[] = data.data;
+
+        assert.equal(games.length, 15, 'all 15 games founded');
+    });
+});
+
 describe('getcii a single game', () => {
     it('founded', async () => {
         const   gameId = 1,
