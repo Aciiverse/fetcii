@@ -1,6 +1,6 @@
 import assert = require("node:assert");
 import { describe, it } from "node:test";
-import { getcii, OrderBy } from "..";
+import { CompareOperator, getcii, OrderBy } from "..";
 
 interface BasicResponse {
     message: string,
@@ -194,6 +194,35 @@ describe('getcii game orderBy id desc', () => {
         });
         assert.equal(sortedGames.length, 20, 'all 20 games founded');
         assert.deepEqual(games, sortedGames, 'all 20 games are equal sorted');
+    });
+});
+
+describe('getcii game filtered on release in 2020', () => {
+    it('founded', async () => {
+        const   result          = await getcii(`${baseUrl}/games`),
+                filteredResult  = await getcii(`${baseUrl}/games`, {
+                    filters: {
+                        filter: {
+                            property: 'release',
+                            operator: CompareOperator.Equal,
+                            value: '2020'
+                        }
+                    }
+                });
+
+        assert(!filteredResult.err, 'response is valid (!err)');
+        assert(filteredResult.response?.ok, 'response is valid (response.ok)');
+        
+        const   data: BasicResponse = result.data,
+                filteredData: BasicResponse = filteredResult.data;
+        assert(filteredData.message, 'message is defined');
+
+        const   games: Game[] = data.data,
+                filteredGames: Game[] = filteredData.data,
+                comparedGames = games.filter(e => e.release === "2020");
+
+        assert.equal(filteredGames.length, 7, 'all 7 filtered games founded');
+        assert.deepEqual(filteredGames, comparedGames, 'all 7 filtered games are equal');
     });
 });
 

@@ -56,7 +56,7 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
             // -> options defined
             if (options.filters) {
                 // -> filters exists
-                queryParams.append('$filter', JSON.stringify(options.filters));
+                queryParams.append('$filters', JSON.stringify(options.filters));
             }
     
             if (options.top) {

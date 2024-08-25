@@ -91,7 +91,8 @@ router.get('/games', async (req: express.Request, res: express.Response) => {
             query   = await getQueryParams(req, {
                 topSkip: true,
                 select: true,
-                orderBy: true
+                orderBy: true,
+                filters: true
             });
 
     if (!data) {
@@ -105,6 +106,11 @@ router.get('/games', async (req: express.Request, res: express.Response) => {
     data.games.forEach(e => {
         games.push(e);
     });
+
+    // Filter handle
+    if (query.filters) {
+        games = getFilteredArray(games, query.filters);
+    }
 
     // OrderBy handle
     if (query.orderBy) {
@@ -380,7 +386,6 @@ async function getQueryParams(req: express.Request, options: GetQueryParamsOptio
 }
 
 /**
-/**
  * @async
  * @method sorts the obejcts array
  * @param {OrderBy | OrderBy[]} orderBy has all sorts
@@ -416,6 +421,60 @@ function orderResponsive(orderBy: OrderBy | OrderBy[]): (a: any, b: any) => numb
         };
         return 0;
     };
+}
+
+/**
+ * @method filters the objects array
+ * @param {any[]} obj object array you want to filter 
+ * @param {Filter | Filter[]} filters that must match
+ * @returns {Array<any>} filtered object array
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 25.08.2024
+ */
+function getFilteredArray(obj: any[], filters: Filter | Filter[]): Array<any> {
+    let filtered: any[] = obj;
+
+    if (!(filters instanceof Array)) {
+        filters = [filters];
+    }
+
+    for (let i = 0; i < filters.length; i++) {
+        const e = filters[i];
+        if (e.filter instanceof Array) {
+            // -> array
+            // COOMING SOON
+        } else {
+            // -> NO array
+            const   filter      = e.filter,
+                    property    = filter.property,
+                    value       = filter.value;
+
+            switch (filter.operator) {
+                case CompareOperator.Equal:
+                    filtered = filtered.filter(e => e[property] === value);
+                    break;
+                case CompareOperator.GreaterEqual:
+                    filtered = filtered.filter(e => e[property] >= value);
+                    break;
+                case CompareOperator.GreaterThan:
+                    filtered = filtered.filter(e => e[property] > value);
+                    break;
+                case CompareOperator.LessEqual:
+                    filtered = filtered.filter(e => e[property] <= value);
+                    break;
+                case CompareOperator.LessThan:
+                    filtered = filtered.filter(e => e[property] < value);
+                    break;
+                case CompareOperator.NotEqual:
+                    filtered = filtered.filter(e => e[property] !== value);
+                    break;
+            }
+        }
+        
+    }
+
+    return filtered;
 }
 
 module.exports = router;
