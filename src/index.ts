@@ -86,21 +86,22 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
         }
 
         // Fire Request
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        const   response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }),
+                data = await response.json();
+
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
+                data: DataTransfer,
                 err: new Error(response.statusText)
             };
         }
-
-        const data = await response.json();
 
         return {
             response: response,
@@ -135,22 +136,22 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
 export async function createcii(url: string): Promise<Result> {
     try {
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        const   response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }),
+                data = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
+                data: data,
                 err: new Error(response.statusText)
             };
         }
-
-        const data = await response.json();
 
         return {
             response: response,
@@ -185,22 +186,22 @@ export async function createcii(url: string): Promise<Result> {
 export async function updatecii(url: string): Promise<Result> {
     try {
 
-        const response = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        const   response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }),
+                data = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
+                data: data,
                 err: new Error(response.statusText)
             };
         }
-
-        const data = await response.json();
 
         return {
             response: response,
@@ -235,22 +236,22 @@ export async function updatecii(url: string): Promise<Result> {
 export async function removecii(url: string): Promise<Result> {
     try {
 
-        const response = await fetch(url, {
-            method: 'DELETE',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        const   response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }),
+                data = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
+                data: data,
                 err: new Error(response.statusText)
             };
         }
-
-        const data = await response.json();
 
         return {
             response: response,

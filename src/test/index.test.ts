@@ -1,6 +1,6 @@
 import assert = require("node:assert");
 import { describe, it } from "node:test";
-import { CompareOperator, getcii, OrderBy } from "..";
+import { CompareOperator, getcii, OrderBy, removecii } from "..";
 
 interface BasicResponse {
     message: string,
@@ -263,4 +263,33 @@ describe('getcii NOT a single game', () => {
 // updatecii END
 
 // removecii BEGIN
+describe('removecii a game', () => {
+    it('founded', async () => {
+        const   gameId = 1,
+                result = await removecii(`${baseUrl}/games/${gameId}`);
+
+        assert(!result.err, 'response is valid (!err)');
+        assert(result.response?.ok, 'response is valid (response.ok)');
+        assert.equal(result.response?.status, 202, 'status is 202');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+        assert(!data.data, 'data is undefined');
+    });
+});
+
+describe('removecii a game (failing attempt)', () => {
+    it('founded', async () => {
+        const   gameId = 31,
+                result = await removecii(`${baseUrl}/games/${gameId}`);
+
+        assert(result.err, 'response is unvalid (err)');
+        assert(!result.response?.ok, 'response is unvalid (!response.ok)');
+        assert.equal(result.response?.status, 404, 'status is 404 -> game not found');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+        assert(!data.data, 'data is undefined');
+    });
+});
 // removecii END
