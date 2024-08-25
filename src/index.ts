@@ -18,7 +18,7 @@ export interface Filter {
 
 export interface OrderBy {
     property: string,
-    ascending?: boolean
+    ascending: boolean
 }
 
 export interface GetOptions {

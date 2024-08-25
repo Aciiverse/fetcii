@@ -1,6 +1,6 @@
 import assert = require("node:assert");
 import { describe, it } from "node:test";
-import { getcii } from "..";
+import { getcii, OrderBy } from "..";
 
 interface BasicResponse {
     message: string,
@@ -114,6 +114,86 @@ describe('getcii game select only id, title and release', () => {
         assert(!games[19].developingLanguage, 'last: developingLanguage undefined');
         assert(!games[0].developer, 'first: developer undefined');
         assert(!games[19].developer, 'last: developer undefined');
+    });
+});
+
+describe('getcii game orderBy release desc, developingLanguage asc, title asc', () => {
+    it('founded', async () => {
+        const   orderBy: OrderBy[] | OrderBy = [
+                    { property: 'release', ascending: false },
+                    { property: 'developingLanguage', ascending: true },
+                    { property: 'title', ascending: true }
+                ],
+                result          = await getcii(`${baseUrl}/games`),
+                sortedResult    = await getcii(`${baseUrl}/games`, {
+                    orderBy: orderBy
+                });
+
+        assert(!sortedResult.err, 'response is valid (!err)');
+        assert(sortedResult.response?.ok, 'response is valid (response.ok)');
+        
+        const   data: BasicResponse = result.data,
+                sortedData: BasicResponse = sortedResult.data;
+        assert(sortedData.message, 'message is defined');
+
+        const   games: Game[] = data.data,
+                sortedGames: Game[] = sortedData.data;
+
+        games.sort((a: any, b: any) => {  
+            // orderBy.forEach(e => {
+            for (let i = 0; i < orderBy.length; i++) {
+                const e = orderBy[i];
+                const   propA = a[e.property],
+                        propB = b[e.property];
+                let greater     = 1,
+                    lessThan    = -1;
+    
+                if (!e.ascending) {
+                    greater = -1;
+                    lessThan = 1;
+                }
+    
+                if (propA > propB) {
+                    return greater;
+                } else if (propA < propB) {
+                    return lessThan;
+                }
+            };
+            return 0;
+        });
+
+        assert.equal(sortedGames.length, 20, 'all 20 games founded');
+        assert.deepEqual(games, sortedGames, 'all 20 games are equal sorted');
+    });
+});
+
+describe('getcii game orderBy id desc', () => {
+    it('founded', async () => {
+        const   result          = await getcii(`${baseUrl}/games`),
+                sortedResult    = await getcii(`${baseUrl}/games`, {
+                    orderBy: { property: 'id', ascending: false }
+                });
+
+        assert(!sortedResult.err, 'response is valid (!err)');
+        assert(sortedResult.response?.ok, 'response is valid (response.ok)');
+        
+        const   data: BasicResponse = result.data,
+                sortedData: BasicResponse = sortedResult.data;
+        assert(sortedData.message, 'message is defined');
+
+        const   games: Game[] = data.data,
+                sortedGames: Game[] = sortedData.data;
+
+        games.sort((a, b) => {
+            if (a.id > b.id) {
+                return -1;
+            } else if (a.id < b.id) {
+                return 1;
+            }
+            return 0;
+        });
+        assert.equal(sortedGames.length, 20, 'all 20 games founded');
+        assert.deepEqual(games, sortedGames, 'all 20 games are equal sorted');
     });
 });
 

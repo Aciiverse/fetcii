@@ -2,7 +2,7 @@ import express = require('express');
 const router = express.Router();
 
 interface Game {
-    id: string;
+    id: number;
     title: string;
     description: string;
     release: string;
@@ -34,7 +34,7 @@ interface Filter {
 
 interface OrderBy {
     property: string,
-    ascending?: boolean
+    ascending: boolean
 }
 
 interface GetQueryParamsOptions {
@@ -88,7 +88,11 @@ router.get('/', (req: express.Request, res: express.Response) => {
  */
 router.get('/games', async (req: express.Request, res: express.Response) => {
     const   data    = await getData(),
-            query   = await getQueryParams(req, {topSkip: true, select: true});
+            query   = await getQueryParams(req, {
+                topSkip: true,
+                select: true,
+                orderBy: true
+            });
 
     if (!data) {
         return res.status(404).send({
@@ -102,11 +106,18 @@ router.get('/games', async (req: express.Request, res: express.Response) => {
         games.push(e);
     });
 
+    // OrderBy handle
+    if (query.orderBy) {
+        games.sort(orderResponsive(query.orderBy));
+    }
+
+    // Top and Skip handle
     if (query.top) {
         games.splice(0, query.skip);
         games.length = query.top;
     }
 
+    // Select handle
     if (query.select) {
         const oldGames = games;
         games = [];
@@ -135,7 +146,7 @@ router.get('/games', async (req: express.Request, res: express.Response) => {
  * @date 24.08.2024
  */
 router.get('/games/:id', async (req: express.Request, res: express.Response) => {
-    const   gameId  = req.params.id,
+    const   gameId  = parseInt(req.params.id),
             data    = await getData();
 
     if (!data || !data.games) {
@@ -242,7 +253,7 @@ router.put('/games', async (req: express.Request, res: express.Response) => {
  */
 router.delete('/games/:id', async (req: express.Request, res: express.Response) => {
     const   data    = await getData(),
-            gameId  = req.params.id;
+            gameId  = parseInt(req.params.id);
 
     if (!data || !data.games) {
         // -> dummy data not founded
@@ -366,6 +377,45 @@ async function getQueryParams(req: express.Request, options: GetQueryParamsOptio
         }
     }
     return response;
+}
+
+/**
+/**
+ * @async
+ * @method sorts the obejcts array
+ * @param {OrderBy | OrderBy[]} orderBy has all sorts
+ * @returns {(a: any, b: any) => number} ordered object array
+ * @author Flowtastisch
+ * @memberof Aciiverse
+ * @date 25.08.2024
+ */
+function orderResponsive(orderBy: OrderBy | OrderBy[]): (a: any, b: any) => number {
+    return (a: any, b: any) => {
+        if (!(orderBy instanceof Array)) {
+            orderBy = [orderBy];
+        }
+
+        // orderBy.forEach(e => {
+        for (let i = 0; i < orderBy.length; i++) {
+            const   e       = orderBy[i],
+                    propA   = a[e.property],
+                    propB   = b[e.property];
+            let greater     = 1,
+                lessThan    = -1;
+
+            if (!e.ascending) {
+                greater = -1;
+                lessThan = 1;
+            }
+
+            if (propA > propB) {
+                return greater;
+            } else if (propA < propB) {
+                return lessThan;
+            }
+        };
+        return 0;
+    };
 }
 
 module.exports = router;
