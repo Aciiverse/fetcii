@@ -1,6 +1,6 @@
 import assert = require("node:assert");
 import { describe, it } from "node:test";
-import { CompareOperator, createcii, getcii, OrderBy, removecii } from "..";
+import { CompareOperator, createcii, getcii, OrderBy, removecii, updatecii } from "..";
 
 interface BasicResponse {
     message: string,
@@ -294,7 +294,7 @@ describe('createcii a game without neccessary property (failing attempt)', () =>
 
         assert(result.err, 'response is unvalid (err)');
         assert(!result.response?.ok, 'response is unvalid (!response.ok)');
-        assert.equal(result.response?.status, 406, 'status is 206');
+        assert.equal(result.response?.status, 406, 'status is 406');
         
         const data: BasicResponse = result.data;
         assert(data.message, 'message is defined');
@@ -304,6 +304,53 @@ describe('createcii a game without neccessary property (failing attempt)', () =>
 // createcii END
 
 // updatecii BEGIN
+describe('updatecii a game', () => {
+    it('founded', async () => {
+        const   updatedGame: Omit<Game, 'id'> = {
+                    title: "Assassin's Creed Shadows",
+                    description: "The 14. Assassin's Creed in Japan",
+                    developer: 'Ubisoft',
+                    developingLanguage: 'AnvilNext 2.0',
+                    release: '2024'
+                },
+                gameId = 1,
+                updatedGameCompared = updatedGame as Game,
+                result  = await updatecii(`${baseUrl}/games/${gameId}`, updatedGame);
+
+        assert(!result.err, 'response is valid (!err)');
+        assert(result.response?.ok, 'response is valid (response.ok)');
+        assert.equal(result.response?.status, 202, 'status is 202');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+        assert(data.data, 'data is defined');
+
+        updatedGameCompared.id = gameId;
+        assert.deepEqual(data.data, updatedGameCompared, 'new game is equal the new game data');
+    });
+});
+
+describe('updatecii a game that doesn`t exist (failing attempt)', () => {
+    it('founded', async () => {
+        const   updatedGame: Omit<Game, 'id'> = {
+                    title: "Assassin's Creed Shadows",
+                    description: "The 14. Assassin's Creed in Japan",
+                    developer: 'Ubisoft',
+                    developingLanguage: 'AnvilNext 2.0',
+                    release: '2024'
+                },
+                gameId = 30,
+                result  = await updatecii(`${baseUrl}/games/${gameId}`, updatedGame);
+
+        assert(result.err, 'response is unvalid (err)');
+        assert(!result.response?.ok, 'response is unvalid (!response.ok)');
+        assert.equal(result.response?.status, 404, 'status is 404');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+        assert(!data.data, 'data is NOT defined');
+    });
+});
 // updatecii END
 
 // removecii BEGIN

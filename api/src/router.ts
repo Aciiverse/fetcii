@@ -216,9 +216,10 @@ router.post('/games', (req: express.Request, res: express.Response) => {
  * @memberof Aciiverse
  * @date 24.08.2024
  */
-router.put('/games', async (req: express.Request, res: express.Response) => {
-    const   body: Game = req.body,
-            data = await getData();
+router.put('/games/:id', async (req: express.Request, res: express.Response) => {
+    const   body: Omit<Game, 'id'> = req.body,
+            gameId  = parseInt(req.params.id),
+            data    = await getData();
 
     if (!data || !data.games) {
         // -> dummy data not founded
@@ -230,14 +231,14 @@ router.put('/games', async (req: express.Request, res: express.Response) => {
     const games = data.games;
 
     if (    !body.description || !body.developer || !body.developingLanguage
-        ||  !body.id || !body.release || !body.title) {
+        ||  !body.release || !body.title) {
         // -> fields not valid
         return res.status(406).send({
             message: 'Invalid data'
         });
     }
 
-    const oldGame = games.find(e => e.id === body.id);
+    const oldGame = games.find(e => e.id === gameId);
 
     if (!oldGame) {
         // -> old game not exists
@@ -246,9 +247,12 @@ router.put('/games', async (req: express.Request, res: express.Response) => {
         });
     }
 
+    const returnData = body as Game;
+    returnData.id = gameId;
+
     res.status(202).send({
         message: 'Success',
-        data: body
+        data: returnData
     });
 });
 
