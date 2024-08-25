@@ -37,9 +37,19 @@ interface OrderBy {
     ascending?: boolean
 }
 
-interface QueryTopAndSkip {
-    top:    number,
-    skip:   number
+interface GetQueryParamsOptions {
+    all?:       boolean;
+    filters?:   boolean;
+    orderBy?:   boolean;
+    topSkip?:   boolean;
+    select?:    boolean;
+}
+interface GetQueryParams {
+    filters?:   Filter  | Filter[];
+    orderBy?:   OrderBy | OrderBy[];
+    top?:       number;
+    skip?:      number;
+    select?:    string[];
 }
 
 /**
@@ -78,7 +88,7 @@ router.get('/', (req: express.Request, res: express.Response) => {
  */
 router.get('/games', async (req: express.Request, res: express.Response) => {
     const   data    = await getData(),
-            topSkip = getQueryTopSkip(req);
+            query   = await getQueryParams(req, {topSkip: true});
 
     if (!data) {
         return res.status(404).send({
@@ -86,16 +96,20 @@ router.get('/games', async (req: express.Request, res: express.Response) => {
         });
     }
 
-    const games = data?.games;
+    // Set games in loop bcs binding behavior
+    const games: Game[] = [];
+    data.games.forEach(e => {
+        games.push(e);
+    });
 
-    if (topSkip) {
-        games.splice(0, topSkip.skip);
-        games.length = topSkip.top;
+    if (query.top) {
+        games.splice(0, query.skip);
+        games.length = query.top;
     }
 
     res.status(200).send({
         message: 'Success',
-        data: data.games
+        data: games
     });
 });
 
@@ -261,104 +275,85 @@ async function getData(): Promise<Data | undefined> {
 
 /**
  * @async
- * @method gets the query filter
+ * @method gets the query params
  * @param {express.Request} req the route request
- * @returns {Promise<Filter | Filter[] | undefined>} the dummy database
+ * @param {GetQueryParamsOptions} options for defining which params should readed
+ * @returns {Promise<GetQueryParams>} all ```query params``` as an object
  * @author Flowtastisch
  * @memberof Aciiverse
- * @date 24.08.2024
+ * @date 25.08.2024
  */
-async function getQueryFilters(req: express.Request): Promise<Filter | Filter[] | undefined> {
-    const filters = req.query.$filters;
+async function getQueryParams(req: express.Request, options: GetQueryParamsOptions): Promise<GetQueryParams> {
+    const response: GetQueryParams = {};
 
-    if (    !filters
-        ||  typeof filters !== "string") return undefined;
+    if (options.all || options.filters) {
+        // -> filters set -> read filters
+        const filters = req.query.$filters;
 
-    try {
-        const parsed: Filter | Filter[] = await JSON.parse(filters);
-        return parsed;
-    } catch (err) {
-        return undefined;
-    }
-}
-
-/**
- * @async
- * @method gets the query top and skip
- * @param {express.Request} req the route request
- * @returns {QueryTopAndSkip | undefined} the dummy database
- * @author Flowtastisch
- * @memberof Aciiverse
- * @date 24.08.2024
- */
-function getQueryTopSkip(req: express.Request): QueryTopAndSkip | undefined {
-    const   top     = parseInt(req.query.$top   as string),
-            skip    = parseInt(req.query.$skip  as string),
-            returnObj: QueryTopAndSkip = {
-                top:    0,
-                skip:   0
-            };
-
-    if (    isNaN(top)
-        ||  typeof top  !== "number"    ) return undefined;
-
-    returnObj.top = top;
-
-    if (!isNaN(skip) && typeof skip === "number") {
-        // -> skip is defined & valid
-        returnObj.skip = skip;
-    } else {
-        // -> skip undefined -> skip initially to 0
-        returnObj.skip = 0;
+        if (    filters
+            &&  typeof filters === "string") {
+            // -> filter string not undefined & valid
+            try {
+                response.filters = await JSON.parse(filters);
+            } catch (err) {
+                // -> response stay undefined
+            }
+        }
     }
 
-    return returnObj;
-}
+    if (options.all || options.orderBy) {
+        // -> orderBy set -> read orderBy
+        const orderBy = req.query.$orderBy;
 
-/**
- * @async
- * @method gets the query orderBy
- * @param {express.Request} req the route request
- * @returns {Promise<OrderBy | OrderBy[] | undefined>} the dummy database
- * @author Flowtastisch
- * @memberof Aciiverse
- * @date 24.08.2024
- */
-async function getQueryOrderBy(req: express.Request): Promise<OrderBy | OrderBy[] | undefined> {
-    const orderBy = req.query.$orderBy;
-
-    if (    !orderBy
-        ||  typeof orderBy !== "string" ) return undefined;
-
-    try {
-        const parsed: OrderBy | OrderBy[] = await JSON.parse(orderBy);
-        return parsed;
-    } catch (err) {
-        return undefined;
+        if (    orderBy
+            &&  typeof orderBy === "string" ) {
+            // -> orderBy string not undefined & valid
+            try {
+                const parsed: OrderBy | OrderBy[] = await JSON.parse(orderBy);
+                response.orderBy = parsed;
+            } catch (err) {
+                // -> response stay undefined
+            }
+        }
     }
-}
 
-/**
- * @async
- * @method gets the query select
- * @param {express.Request} req the route request
- * @returns {Promise<string[] | undefined>} the dummy database
- * @author Flowtastisch
- * @memberof Aciiverse
- * @date 24.08.2024
- */
-async function getQuerySelect(req: express.Request): Promise<string[] | undefined> {
-    const select = req.query.$select;
+    if (options.all || options.select) {
+        // -> select set -> read select
+        const select = req.query.$select;
 
-    if (    !select
-        ||  typeof select !== "string"  ) return undefined;
-
-    try {
-        const parsed: string[] = await JSON.parse(select);
-        return parsed;
-    } catch (err) {
-        return undefined;
+        if (    select
+            &&  typeof select === "string"  ) {
+            // -> select string not undefined & valid
+            try {
+                const parsed: string[] = await JSON.parse(select);
+                response.select = parsed;
+            } catch (err) {
+                // -> response stay undefined
+            }
+        } 
     }
+
+    if (options.all || options.topSkip) {
+        // -> topSkip set -> read topSkip
+        const   top     = parseInt(req.query.$top   as string),
+                skip    = parseInt(req.query.$skip  as string);
+
+        if (    !isNaN(top)
+            &&  typeof top  === "number"    ) {
+            // -> top number not undefined & valid
+            response.top = top;
+        }
+
+        if (    !isNaN(skip)
+            &&  typeof skip === "number"    ) {
+            // -> skip number defined & valid
+            response.skip = skip;
+        } else {
+            // -> skip undefined -> skip initially to 0
+            response.skip = 0;
+        }
+    }
+    return response;
 }
 
 module.exports = router;
