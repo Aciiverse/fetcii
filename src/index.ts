@@ -64,7 +64,7 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
                 queryParams.append('$top', String(options.top));
             }
 
-            if (options.top) {
+            if (options.skip) {
                 // -> skip exists
                 queryParams.append('$skip', String(options.skip));
             }
