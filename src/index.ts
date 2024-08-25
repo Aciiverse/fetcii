@@ -92,7 +92,7 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
                         "Content-Type": "application/json"
                     }
                 }),
-                data = await response.json();
+                json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
@@ -105,7 +105,7 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
 
         return {
             response: response,
-            data: data
+            data: json
         };
 
     } catch (err) {
@@ -128,34 +128,35 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
 /**
  * @method creates an entry by using the ```POST``` request
  * @param {string} url the url where you want to fetch from
+ * @param {Record<string, any>} data you want to create
  * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
  */
-export async function createcii(url: string): Promise<Result> {
+export async function createcii(url: string, data: Record<string, any>): Promise<Result> {
     try {
-
         const   response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json"
-                    }
+                    },
+                    body: JSON.stringify(data)
                 }),
-                data = await response.json();
+                json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
-                data: data,
+                data: json,
                 err: new Error(response.statusText)
             };
         }
 
         return {
             response: response,
-            data: data
+            data: json
         };
 
     } catch (err) {
@@ -192,20 +193,20 @@ export async function updatecii(url: string): Promise<Result> {
                         "Content-Type": "application/json"
                     }
                 }),
-                data = await response.json();
+                json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
-                data: data,
+                data: json,
                 err: new Error(response.statusText)
             };
         }
 
         return {
             response: response,
-            data: data
+            data: json
         };
 
     } catch (err) {
@@ -242,20 +243,20 @@ export async function removecii(url: string): Promise<Result> {
                         "Content-Type": "application/json"
                     }
                 }),
-                data = await response.json();
+                json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
-                data: data,
+                data: json,
                 err: new Error(response.statusText)
             };
         }
 
         return {
             response: response,
-            data: data
+            data: json
         };
 
     } catch (err) {

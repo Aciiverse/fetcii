@@ -188,18 +188,22 @@ router.get('/games/:id', async (req: express.Request, res: express.Response) => 
  * @date 24.08.2024
  */
 router.post('/games', (req: express.Request, res: express.Response) => {
-    const body: Game = req.body;
+    const   body: Game = req.body,
+            newGame: Game = body;
 
     if (    !body.description || !body.developer || !body.developingLanguage
-        ||  !body.id || !body.release || !body.title) {
+        || !body.release || !body.title) {
         // -> fields not valid
         return res.status(406).send({
             message: 'Invalid data'
         });
     }
 
+    newGame.id = 21;
+
     res.status(201).send({
-        message: 'Success'
+        message: 'Success',
+        data: newGame
     });
 });
 

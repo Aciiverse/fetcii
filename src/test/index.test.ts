@@ -1,6 +1,6 @@
 import assert = require("node:assert");
 import { describe, it } from "node:test";
-import { CompareOperator, getcii, OrderBy, removecii } from "..";
+import { CompareOperator, createcii, getcii, OrderBy, removecii } from "..";
 
 interface BasicResponse {
     message: string,
@@ -8,7 +8,7 @@ interface BasicResponse {
 }
 
 interface Game {
-    id: string;
+    id: number;
     title: string;
     description: string;
     release: string;
@@ -257,6 +257,50 @@ describe('getcii NOT a single game', () => {
 // getcii END
 
 // createcii BEGIN
+describe('createcii a game', () => {
+    it('founded', async () => {
+        const   newGame: Omit<Game, 'id'> = {
+                    title: "Assassin's Creed Shadows",
+                    description: "The 14. Assassin's Creed in Japan",
+                    developer: 'Ubisoft',
+                    developingLanguage: 'AnvilNext 2.0',
+                    release: '2024'
+                },
+                newGameCompared = newGame as Game,
+                result  = await createcii(`${baseUrl}/games`, newGame);
+
+        assert(!result.err, 'response is valid (!err)');
+        assert(result.response?.ok, 'response is valid (response.ok)');
+        assert.equal(result.response?.status, 201, 'status is 201');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+        assert(data.data, 'data is defined');
+
+        newGameCompared.id = 21;
+        assert.deepEqual(data.data, newGameCompared, 'new game is equal the new game data');
+    });
+});
+
+describe('createcii a game without neccessary property (failing attempt)', () => {
+    it('founded', async () => {
+        const   newGame: Omit<Game, 'id' | 'developer'> = {
+                    title: "Assassin's Creed Shadows",
+                    description: "The 14. Assassin's Creed in Japan",
+                    developingLanguage: 'AnvilNext 2.0',
+                    release: '2024'
+                },
+                result  = await createcii(`${baseUrl}/games`, newGame);
+
+        assert(result.err, 'response is unvalid (err)');
+        assert(!result.response?.ok, 'response is unvalid (!response.ok)');
+        assert.equal(result.response?.status, 406, 'status is 206');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+        assert(!data.data, 'data is NOT defined');
+    });
+});
 // createcii END
 
 // updatecii BEGIN
