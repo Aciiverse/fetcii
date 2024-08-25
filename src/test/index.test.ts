@@ -87,6 +87,36 @@ describe('getcii game 6 - 20', () => {
     });
 });
 
+describe('getcii game select only id, title and release', () => {
+    it('founded', async () => {
+        const result = await getcii(`${baseUrl}/games`, {
+            select: ['id', 'title', 'release']
+        });
+
+        assert(!result.err, 'response is valid (!err)');
+        assert(result.response?.ok, 'response is valid (response.ok)');
+        
+        const data: BasicResponse = result.data;
+        assert(data.message, 'message is defined');
+
+        const games: Game[] = data.data;
+
+        assert.equal(games.length, 20, 'all 20 games founded');
+        assert(games[0].id, 'first: id defined');
+        assert(games[19].id, 'last: id defined');
+        assert(games[0].title, 'first: title defined');
+        assert(games[19].title, 'last: title defined');
+        assert(games[0].release, 'first: release defined');
+        assert(games[19].release, 'last: release defined');
+        assert(!games[0].description, 'first: description undefined');
+        assert(!games[19].description, 'last: description undefined');
+        assert(!games[0].developingLanguage, 'first: developingLanguage undefined');
+        assert(!games[19].developingLanguage, 'last: developingLanguage undefined');
+        assert(!games[0].developer, 'first: developer undefined');
+        assert(!games[19].developer, 'last: developer undefined');
+    });
+});
+
 describe('getcii a single game', () => {
     it('founded', async () => {
         const   gameId = 1,

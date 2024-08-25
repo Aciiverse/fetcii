@@ -88,7 +88,7 @@ router.get('/', (req: express.Request, res: express.Response) => {
  */
 router.get('/games', async (req: express.Request, res: express.Response) => {
     const   data    = await getData(),
-            query   = await getQueryParams(req, {topSkip: true});
+            query   = await getQueryParams(req, {topSkip: true, select: true});
 
     if (!data) {
         return res.status(404).send({
@@ -97,7 +97,7 @@ router.get('/games', async (req: express.Request, res: express.Response) => {
     }
 
     // Set games in loop bcs binding behavior
-    const games: Game[] = [];
+    let games: Game[] = [];
     data.games.forEach(e => {
         games.push(e);
     });
@@ -105,6 +105,18 @@ router.get('/games', async (req: express.Request, res: express.Response) => {
     if (query.top) {
         games.splice(0, query.skip);
         games.length = query.top;
+    }
+
+    if (query.select) {
+        const oldGames = games;
+        games = [];
+        oldGames.forEach(e => {
+            const newEntry: any = {};
+            query.select?.forEach(select => {
+                newEntry[select] = (e as any)[select];
+            });
+            games.push(newEntry);
+        });
     }
 
     res.status(200).send({
