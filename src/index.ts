@@ -16,15 +16,15 @@ export interface Filter {
     and?: boolean
 };
 
-export interface OderBy {
+export interface OrderBy {
     property: string,
-    ascending?: boolean
+    ascending: boolean
 }
 
 export interface GetOptions {
     filters?: Filter | Filter[],
     select?: string[],
-    orderBy?: OderBy | OderBy[],
+    orderBy?: OrderBy | OrderBy[],
     top?:   number,
     skip?:  number
 }
@@ -56,17 +56,17 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
             // -> options defined
             if (options.filters) {
                 // -> filters exists
-                queryParams.append('$filter', JSON.stringify(options.filters));
+                queryParams.append('$filters', JSON.stringify(options.filters));
             }
     
             if (options.top) {
                 // -> top exists
-                queryParams.append('$top', JSON.stringify(options.top));
+                queryParams.append('$top', String(options.top));
             }
 
-            if (options.top) {
+            if (options.skip) {
                 // -> skip exists
-                queryParams.append('$skip', JSON.stringify(options.skip));
+                queryParams.append('$skip', String(options.skip));
             }
 
             if (options.orderBy) {
@@ -81,30 +81,31 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
     
             if (queryParams.size > 0) {
                 // -> queryParams exists -> add params to url
-                url = `${url}?${String(queryParams)}`;
+                url = `${url}/?${String(queryParams)}`;
             }
         }
 
         // Fire Request
-        const response = await fetch(url, {
-            method: 'GET',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        const   response = await fetch(url, {
+                    method: 'GET',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }),
+                json = await response.json();
+
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
+                data: DataTransfer,
                 err: new Error(response.statusText)
             };
         }
 
-        const data = await response.json();
-
         return {
             response: response,
-            data: data
+            data: json
         };
 
     } catch (err) {
@@ -127,34 +128,35 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
 /**
  * @method creates an entry by using the ```POST``` request
  * @param {string} url the url where you want to fetch from
+ * @param {Record<string, any>} data you want to create
  * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
  */
-export async function createcii(url: string): Promise<Result> {
+export async function createcii(url: string, data: Record<string, any>): Promise<Result> {
     try {
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        const   response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                }),
+                json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
+                data: json,
                 err: new Error(response.statusText)
             };
         }
 
-        const data = await response.json();
-
         return {
             response: response,
-            data: data
+            data: json
         };
 
     } catch (err) {
@@ -177,34 +179,36 @@ export async function createcii(url: string): Promise<Result> {
 /**
  * @method updates an entry by using the ```PUT``` request
  * @param {string} url the url where you want to fetch from
+ * @param {Record<string, any>} data you want to update
  * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
  */
-export async function updatecii(url: string): Promise<Result> {
+export async function updatecii(url: string, data: Record<string, any>): Promise<Result> {
     try {
 
-        const response = await fetch(url, {
-            method: 'PUT',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        const   response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                }),
+                json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
+                data: json,
                 err: new Error(response.statusText)
             };
         }
 
-        const data = await response.json();
-
         return {
             response: response,
-            data: data
+            data: json
         };
 
     } catch (err) {
@@ -235,26 +239,26 @@ export async function updatecii(url: string): Promise<Result> {
 export async function removecii(url: string): Promise<Result> {
     try {
 
-        const response = await fetch(url, {
-            method: 'DELETE',
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        const   response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }),
+                json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
             return {
                 response: response,
+                data: json,
                 err: new Error(response.statusText)
             };
         }
 
-        const data = await response.json();
-
         return {
             response: response,
-            data: data
+            data: json
         };
 
     } catch (err) {
