@@ -48,13 +48,13 @@
 
         import { getcii } from @aciiverse/fetcii
 
-### Entwickeln
+## Entwickeln
 
 > Hier sind ein paar Beispiele, wie man die Funktionen benutzen kann:
 
-#### getcii
+### getcii
 
-##### Hole dir alle Spiele
+#### Hole dir alle Spiele
 
         import { getcii } from '@aciiverse/fetcii';
 
@@ -74,7 +74,113 @@
             console.log(result.data?.message); // log success message
         }
 
-##### Hole dir ein einzelnes Spiel
+> Wenn nur Spiel 6 - 20 ausgegeben werden soll, kannst du ```top``` & ```skip``` nutzen:
+
+        const result = await getcii(url, {
+            top:    15, // get 15 games max
+            skip:   5   // skip the first 5 games
+        });
+
+- Die Queryparameter kommen als ```$top``` und ```$skip``` an
+
+> Wenn alle Spiele absteigend nach dem ```release``` sortiert werden sollen:
+        const orderBy: OrderByType = {
+            property: 'release',
+            ascending: false
+        };
+
+        const result = await getcii(url, {
+            orderBy: orderBy
+        });
+
+- Der Queryparameter kommt als ```$orderBy``` an
+
+> Wenn alle Spiele aufsteigend nach dem ```title``` -> aufsteigend nach der ```id``` sortiert werden sollen:
+
+        const orderBy: OrderByType = [
+            { property: 'title', ascending: true },
+            { property: 'id', ascending: true }
+        ];
+
+        const result = await getcii(url, {
+            orderBy: orderBy
+        });
+
+- Der Queryparameter kommt als ```$orderBy``` an
+
+> Wenn nur der ```title``` und die ```id``` selektiert werden soll, kannst du ```select``` nutzen:
+
+        const result = await getcii(url, {
+            select: ['title', 'id'] // select only the 'title' and 'id'
+        });
+
+- Der Queryparameter kommt als ```$select``` an
+
+> Wenn gefiltert werden soll, kann der neue Filtertyp mit dem Property ```filter``` verwendet werden:
+
+- Alle Spiele mit der id 1:
+
+        const filter: FilterType = {
+            operator: CompareOperator.Equal,
+            property: 'id',
+            value: 1
+        };
+
+- Alle Spiele namens 'Minecraft' **oder** 'Portal 2':
+
+        const filter: FilterType = {
+            filters: [
+                {
+                    operator: CompareOperator.Equal,
+                    property: 'title',
+                    value: 'Minecraft'
+                },
+                {
+                    operator: CompareOperator.Equal,
+                    property: 'title',
+                    value: 'Portal 2'
+                }
+            ],
+            and: false
+        };
+
+- Alle Spiele namens 'Minecraft' **oder** zwischen 2020 **und** 2028 erschienen
+
+        const filter: FilterType = {
+            filters: [
+                {
+                    filters: [
+                        {
+                            operator: CompareOperator.GreaterEqual,
+                            property: 'release',
+                            value: 2020
+                        },
+                        {
+                            operator: CompareOperator.LessEqual,
+                            property: 'release',
+                            value: 2028
+                        }
+                    ],
+                    and: true
+                },
+                {
+                    operator: CompareOperator.Equal,
+                    property: 'title',
+                    value: 'Minecraft'
+                }
+            ],
+            and: false
+        };
+
+- Filter zuweisen:
+
+        const result = await getcii(url, {
+            filter: filters // set filter
+        });
+
+- Der Queryparameter kommt als ```$filters``` an
+
+#### Hole dir ein einzelnes Spiel
 
         import { getcii } from '@aciiverse/fetcii';
 
@@ -94,9 +200,9 @@
             console.log(result.data?.message); // log success message
         }
 
-#### createcii
+### createcii
 
-##### Erstelle ein Spiel
+#### Erstelle ein Spiel
 
         import { createcii } from '@aciiverse/fetcii';
 
@@ -121,9 +227,9 @@
             console.log(result.data?.message); // log success message
         }
 
-#### updatecii
+### updatecii
 
-##### Bearbeite ein Spiel
+#### Bearbeite ein Spiel
 
         import { updatecii } from '@aciiverse/fetcii';
 
@@ -148,9 +254,9 @@
             console.log(result.data?.message); // log success message
         }
 
-#### deletecii
+### deletecii
 
-##### Lösche ein Spiel
+#### Lösche ein Spiel
 
         import { removecii } from '@aciiverse/fetcii';
     
