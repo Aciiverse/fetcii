@@ -21,17 +21,18 @@
 
 ## Features
 
-- einfaches fetch Modul
-- inspiriert von odata v2
-- eingebautes error handling -> immer eine message
-- unterstützt automatisiert filter, top, skip, select query parameter
-- designed für aciiFX, aber auch anders nutzbar
+- einfaches fetch Modul 🎲
+- inspiriert von odata v2 👀
+- Unterstützung der vier Haupt CRUD Methoden 📓
+- eingebautes error handling -> immer eine message 💬
+- unterstützt automatisiert filter, top, skip, select query parameter ✨
+- designed für aciiFX, aber auch anders nutzbar 🥑
 
 ## Entwickeln mit fetcii
 
 ### Was du brauchst
 
-- NodeJS (>= vXX)
+- NodeJS
 - TypeScript `npm install -g typescript`
 
 ### Installation
@@ -52,7 +53,7 @@
 
 #### getcii
 
-##### Hole dir alle Games
+##### Hole dir alle Spiele
 
         import { getcii } from '@aciiverse/fetcii';
 
