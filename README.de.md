@@ -1,10 +1,10 @@
 # fetcii
 
-> Simple Fetch module primarily designed for the aciiFX backend
+> Einfaches Fetch-Modul primär für das aciiFX-Backend designed
 
-> [Hier](/README.de.md) ist die Doku ebenfalls in deutsch.
+> [Here](/README.md) is the doc also in english.
 
-## Developer
+## Entwickler*Innen
 
 - [Flowtastisch](https://flowtastisch.com)
 
@@ -22,39 +22,39 @@
 
 ## Features
 
-- simple fetch module 🎲
-- inspired by odata v2 👀
-- support of the four main CRUD methodes 📓
-- integrated error handling -> always a message 💬
-- supports automated filter, top, skip, select query parameter ✨
-- designed for aciiFX, but also usable differently 🥑
+- einfaches fetch Modul 🎲
+- inspiriert von odata v2 👀
+- Unterstützung der vier Haupt CRUD Methoden 📓
+- eingebautes error handling -> immer eine message 💬
+- unterstützt automatisiert filter, top, skip, select query parameter ✨
+- designed für aciiFX, aber auch anders nutzbar 🥑
 
-## Develop with fetcii
+## Entwickeln mit fetcii
 
-### What you need
+### Was du brauchst
 
 - NodeJS
 - TypeScript `npm install -g typescript`
 
 ### Installation
 
-1. Install the fetcii package (e.g. yarn **or** npm)
+1. Installiere das fetcii Paket (Bsp.: yarn **oder** npm)
 
         yarn add @aciiverse/fetcii
 
         npm i @aciiverse/fetcii
 
-2. Now you can simply import the functions (either automatically if you choose the functions or manually in the file with):
+2. Jetzt kannst du die Funktionen einfach importiert werden (entweder automatisch, wenn du die Funktionen wählst oder manuell oben in der Datei mit):
 
         import { getcii } from @aciiverse/fetcii
 
-## Develop
+## Entwickeln
 
-> Here are a few examples of how to use the functions:
+> Hier sind ein paar Beispiele, wie man die Funktionen benutzen kann:
 
 ### getcii
 
-#### Get all games
+#### Hole dir alle Spiele
 
         import { getcii } from '@aciiverse/fetcii';
 
@@ -74,16 +74,16 @@
             console.log(result.data?.message); // log success message
         }
 
-> if only game 6-20 is to be output, you can use ```top``` & ```skip```:
+> Wenn nur Spiel 6 - 20 ausgegeben werden soll, kannst du ```top``` & ```skip``` nutzen:
 
         const result = await getcii(url, {
             top:    15, // get 15 games max
             skip:   5   // skip the first 5 games
         });
 
-- the query parameters come as ```$top``` and ```$skip```
+- Die Queryparameter kommen als ```$top``` und ```$skip``` an
 
-> if all games should be sorted (descending) ```release```:
+> Wenn alle Spiele absteigend nach dem ```release``` sortiert werden sollen:
         const orderBy: OrderByType = {
             property: 'release',
             ascending: false
@@ -93,9 +93,9 @@
             orderBy: orderBy
         });
 
-- the query parameter comes as ```$orderBy```
+- Der Queryparameter kommt als ```$orderBy``` an
 
-> if all games should be sorted (ascending) ```title``` -> (ascending) ```id```:
+> Wenn alle Spiele aufsteigend nach dem ```title``` -> aufsteigend nach der ```id``` sortiert werden sollen:
 
         const orderBy: OrderByType = [
             { property: 'title', ascending: true },
@@ -106,19 +106,19 @@
             orderBy: orderBy
         });
 
-- the query parameter comes as ```$orderBy```
+- Der Queryparameter kommt als ```$orderBy``` an
 
-> if only the ```title``` and the ```id``` should be selected, you can use ```select``` :
+> Wenn nur der ```title``` und die ```id``` selektiert werden soll, kannst du ```select``` nutzen:
 
         const result = await getcii(url, {
             select: ['title', 'id'] // select only the 'title' and 'id'
         });
 
-- the query parameter comes as ```$select```
+- Der Queryparameter kommt als ```$select``` an
 
-> if you want to filter, the new filter type can be used with the property ```filter```:
+> Wenn gefiltert werden soll, kann der neue Filtertyp mit dem Property ```filter``` verwendet werden:
 
-- all games with the id 1:
+- Alle Spiele mit der id 1:
 
         const filter: FilterType = {
             operator: CompareOperator.Equal,
@@ -126,7 +126,7 @@
             value: 1
         };
 
-- all games called 'Minecraft' **or** 'Portal 2':
+- Alle Spiele namens 'Minecraft' **oder** 'Portal 2':
 
         const filter: FilterType = {
             filters: [
@@ -144,7 +144,7 @@
             and: false
         };
 
-- all games called 'Minecraft' **or** released between 2020 **and** 2028
+- Alle Spiele namens 'Minecraft' **oder** zwischen 2020 **und** 2028 erschienen
 
         const filter: FilterType = {
             filters: [
@@ -172,15 +172,15 @@
             and: false
         };
 
-- assign filters:
+- Filter zuweisen:
 
         const result = await getcii(url, {
             filter: filters // set filter
         });
 
-- the query parameter comes as ```$filters```
+- Der Queryparameter kommt als ```$filters``` an
 
-#### Get a single game
+#### Hole dir ein einzelnes Spiel
 
         import { getcii } from '@aciiverse/fetcii';
 
@@ -202,7 +202,7 @@
 
 ### createcii
 
-#### Create a game
+#### Erstelle ein Spiel
 
         import { createcii } from '@aciiverse/fetcii';
 
@@ -229,7 +229,7 @@
 
 ### updatecii
 
-#### Edit a game
+#### Bearbeite ein Spiel
 
         import { updatecii } from '@aciiverse/fetcii';
 
@@ -256,7 +256,7 @@
 
 ### deletecii
 
-#### Delete a game
+#### Lösche ein Spiel
 
         import { removecii } from '@aciiverse/fetcii';
     

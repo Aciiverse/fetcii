@@ -1,0 +1,164 @@
+{
+    "games": [
+        {
+            "id": 1,
+            "title": "Minecraft",
+            "description": "A game about blocks",
+            "release": "2011",
+            "developingLanguage": "Java",
+            "developer": "Mojang Studios"
+        },
+        {
+            "id": 2,
+            "title": "The Witcher 3: Wild Hunt",
+            "description": "An open-world RPG with a strong narrative focus",
+            "release": "2015",
+            "developingLanguage": "C++",
+            "developer": "CD Projekt Red"
+        },
+        {
+            "id": 3,
+            "title": "Fortnite",
+            "description": "A battle royale game with building mechanics",
+            "release": "2017",
+            "developingLanguage": "Unreal Engine",
+            "developer": "Epic Games"
+        },
+        {
+            "id": 4,
+            "title": "League of Legends",
+            "description": "A fast-paced, competitive online game",
+            "release": "2009",
+            "developingLanguage": "C++",
+            "developer": "Riot Games"
+        },
+        {
+            "id": 5,
+            "title": "Overwatch",
+            "description": "A team-based multiplayer first-person shooter",
+            "release": "2016",
+            "developingLanguage": "C++",
+            "developer": "Blizzard Entertainment"
+        },
+        {
+            "id": 6,
+            "title": "Red Dead Redemption 2",
+            "description": "An open-world western game with an immersive story",
+            "release": "2018",
+            "developingLanguage": "C++",
+            "developer": "Rockstar Games"
+        },
+        {
+            "id": 7,
+            "title": "Cyberpunk 2077",
+            "description": "An open-world RPG set in a dystopian future",
+            "release": "2020",
+            "developingLanguage": "C++",
+            "developer": "CD Projekt Red"
+        },
+        {
+            "id": 8,
+            "title": "Among Us",
+            "description": "A party game of teamwork and betrayal",
+            "release": "2018",
+            "developingLanguage": "Unity",
+            "developer": "Innersloth"
+        },
+        {
+            "id": 9,
+            "title": "Doom Eternal",
+            "description": "A fast-paced first-person shooter",
+            "release": "2020",
+            "developingLanguage": "id Tech 7",
+            "developer": "id Software"
+        },
+        {
+            "id": 10,
+            "title": "Animal Crossing: New Horizons",
+            "description": "A life simulation game where you build your own island",
+            "release": "2020",
+            "developingLanguage": "C++",
+            "developer": "Nintendo"
+        },
+        {
+            "id": 11,
+            "title": "The Legend of Zelda: Breath of the Wild",
+            "description": "An open-world adventure game with a focus on exploration",
+            "release": "2017",
+            "developingLanguage": "C++",
+            "developer": "Nintendo"
+        },
+        {
+            "id": 12,
+            "title": "Hades",
+            "description": "A rogue-like dungeon crawler",
+            "release": "2020",
+            "developingLanguage": "C#",
+            "developer": "Supergiant Games"
+        },
+        {
+            "id": 13,
+            "title": "Call of Duty: Modern Warfare",
+            "description": "A first-person shooter with a contemporary setting",
+            "release": "2019",
+            "developingLanguage": "C++",
+            "developer": "Infinity Ward"
+        },
+        {
+            "id": 14,
+            "title": "Dark Souls III",
+            "description": "An action RPG with challenging combat",
+            "release": "2016",
+            "developingLanguage": "C++",
+            "developer": "FromSoftware"
+        },
+        {
+            "id": 15,
+            "title": "Genshin Impact",
+            "description": "An open-world action RPG with elemental magic",
+            "release": "2020",
+            "developingLanguage": "Unity",
+            "developer": "miHoYo"
+        },
+        {
+            "id": 16,
+            "title": "Assassin's Creed Valhalla",
+            "description": "An open-world RPG set in the Viking era",
+            "release": "2020",
+            "developingLanguage": "AnvilNext 2.0",
+            "developer": "Ubisoft"
+        },
+        {
+            "id": 17,
+            "title": "Ghost of Tsushima",
+            "description": "An open-world action-adventure set in feudal Japan",
+            "release": "2020",
+            "developingLanguage": "C++",
+            "developer": "Sucker Punch Productions"
+        },
+        {
+            "id": 18,
+            "title": "Resident Evil Village",
+            "description": "A survival horror game with a first-person perspective",
+            "release": "2021",
+            "developingLanguage": "RE Engine",
+            "developer": "Capcom"
+        },
+        {
+            "id": 19,
+            "title": "Horizon Zero Dawn",
+            "description": "An open-world action RPG set in a post-apocalyptic world",
+            "release": "2017",
+            "developingLanguage": "Decima",
+            "developer": "Guerrilla Games"
+        },
+        {
+            "id": 20,
+            "title": "Elden Ring",
+            "description": "An open-world action RPG with challenging combat",
+            "release": "2022",
+            "developingLanguage": "C++",
+            "developer": "FromSoftware"
+        }
+    ]
+}
