@@ -12,6 +12,15 @@
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "fetch",
+    "api",
+    "typescript",
+    "frontend",
+    "simple",
+    "handle",
+    "acii"
+  ],
   "scripts": {
     "start": "node dist/index.js",
     "build": "tsc",

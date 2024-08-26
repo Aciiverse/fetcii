@@ -7,24 +7,27 @@ export enum CompareOperator {
     LessEqual       = 'le',
 }
 
-export interface Filter {
-    filter: {
-        property: string,
-        operator: CompareOperator,
-        value: any
-    } | Filter[],
+interface Filter {
+    property: string,
+    operator: CompareOperator,
+    value: any
+}
+interface Filters {
+    filters: Filter[],
     and?: boolean
-};
+}
+export type FilterType = Filter | Filters;
 
-export interface OrderBy {
+interface OrderBy {
     property: string,
     ascending: boolean
 }
+export type OrderByType = OrderBy | OrderBy[];
 
 export interface GetOptions {
-    filters?: Filter | Filter[],
+    filters?: FilterType,
     select?: string[],
-    orderBy?: OrderBy | OrderBy[],
+    orderBy?: OrderByType,
     top?:   number,
     skip?:  number
 }
@@ -33,10 +36,6 @@ interface Result {
     response?: Response,
     data?: any,
     err?: Error
-}
-
-export interface FilterProperty {
-
 }
 
 /**
@@ -96,10 +95,16 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
+            let errMsg = response.statusText;
+
+            if (json.data?.message) {
+                // -> message is in data
+                errMsg = json.data.message;
+            }
             return {
                 response: response,
-                data: DataTransfer,
-                err: new Error(response.statusText)
+                data: json,
+                err: new Error(errMsg)
             };
         }
 
@@ -147,10 +152,16 @@ export async function createcii(url: string, data: Record<string, any>): Promise
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
+            let errMsg = response.statusText;
+
+            if (json.data?.message) {
+                // -> message is in data
+                errMsg = json.data.message;
+            }
             return {
                 response: response,
                 data: json,
-                err: new Error(response.statusText)
+                err: new Error(errMsg)
             };
         }
 
@@ -199,10 +210,16 @@ export async function updatecii(url: string, data: Record<string, any>): Promise
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
+            let errMsg = response.statusText;
+
+            if (json.data?.message) {
+                // -> message is in data
+                errMsg = json.data.message;
+            }
             return {
                 response: response,
                 data: json,
-                err: new Error(response.statusText)
+                err: new Error(errMsg)
             };
         }
 
@@ -249,10 +266,16 @@ export async function removecii(url: string): Promise<Result> {
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
+            let errMsg = response.statusText;
+
+            if (json.data?.message) {
+                // -> message is in data
+                errMsg = json.data.message;
+            }
             return {
                 response: response,
                 data: json,
-                err: new Error(response.statusText)
+                err: new Error(errMsg)
             };
         }
 
