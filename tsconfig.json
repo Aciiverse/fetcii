@@ -8,11 +8,13 @@
         "sourceMap": true,
         "rootDir": "src",
         "outDir": "dist",
-        "types": ["node"]
+        "types": ["node"],
+        "declaration": true
     },
     "exclude": [
         "node_modules",
         "**/node_modules/*",
-        "api"
+        "api",
+        "dist"
     ]
 }
