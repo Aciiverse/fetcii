@@ -12,7 +12,7 @@ interface Filter {
     operator: CompareOperator,
     value: any
 }
-export interface Filters {
+interface Filters {
     filters: Filter[],
     and?: boolean
 }
@@ -36,10 +36,6 @@ interface Result {
     response?: Response,
     data?: any,
     err?: Error
-}
-
-export interface FilterProperty {
-
 }
 
 /**
