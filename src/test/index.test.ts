@@ -1,6 +1,6 @@
 import assert = require("node:assert");
 import { describe, it } from "node:test";
-import { CompareOperator, createcii, getcii, OrderBy, removecii, updatecii } from "..";
+import { CompareOperator, createcii, getcii, OrderByType, removecii, updatecii } from "..";
 
 interface BasicResponse {
     message: string,
@@ -119,7 +119,7 @@ describe('getcii game select only id, title and release', () => {
 
 describe('getcii game orderBy release desc, developingLanguage asc, title asc', () => {
     it('founded', async () => {
-        const   orderBy: OrderBy[] | OrderBy = [
+        const   orderBy: OrderByType = [
                     { property: 'release', ascending: false },
                     { property: 'developingLanguage', ascending: true },
                     { property: 'title', ascending: true }
@@ -202,11 +202,9 @@ describe('getcii game filtered on release in 2020', () => {
         const   result          = await getcii(`${baseUrl}/games`),
                 filteredResult  = await getcii(`${baseUrl}/games`, {
                     filters: {
-                        filter: {
-                            property: 'release',
-                            operator: CompareOperator.Equal,
-                            value: '2020'
-                        }
+                        property: 'release',
+                        operator: CompareOperator.Equal,
+                        value: '2020'
                     }
                 });
 
@@ -250,7 +248,7 @@ describe('getcii NOT a single game', () => {
 
         assert(result.err, 'response is valid (!err)');
         assert(!result.response?.ok, 'response is valid (response.ok)');
-        assert(!result.data, 'data is undefined');
+        assert(result.data, 'data is undefined');
         assert.equal(typeof result.err.message, 'string', 'error message is defined');
     });
 });

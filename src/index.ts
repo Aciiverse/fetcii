@@ -7,24 +7,27 @@ export enum CompareOperator {
     LessEqual       = 'le',
 }
 
-export interface Filter {
-    filter: {
-        property: string,
-        operator: CompareOperator,
-        value: any
-    } | Filter[],
+interface Filter {
+    property: string,
+    operator: CompareOperator,
+    value: any
+}
+export interface Filters {
+    filters: Filter[],
     and?: boolean
-};
+}
+export type FilterType = Filter | Filters;
 
-export interface OrderBy {
+interface OrderBy {
     property: string,
     ascending: boolean
 }
+export type OrderByType = OrderBy | OrderBy[];
 
 export interface GetOptions {
-    filters?: Filter | Filter[],
+    filters?: FilterType,
     select?: string[],
-    orderBy?: OrderBy | OrderBy[],
+    orderBy?: OrderByType,
     top?:   number,
     skip?:  number
 }
@@ -98,7 +101,7 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
             // -> Response not okay -> fill err field
             let errMsg = response.statusText;
 
-            if (json.data.message) {
+            if (json.data?.message) {
                 // -> message is in data
                 errMsg = json.data.message;
             }
@@ -155,7 +158,7 @@ export async function createcii(url: string, data: Record<string, any>): Promise
             // -> Response not okay -> fill err field
             let errMsg = response.statusText;
 
-            if (json.data.message) {
+            if (json.data?.message) {
                 // -> message is in data
                 errMsg = json.data.message;
             }
@@ -213,7 +216,7 @@ export async function updatecii(url: string, data: Record<string, any>): Promise
             // -> Response not okay -> fill err field
             let errMsg = response.statusText;
 
-            if (json.data.message) {
+            if (json.data?.message) {
                 // -> message is in data
                 errMsg = json.data.message;
             }
@@ -269,7 +272,7 @@ export async function removecii(url: string): Promise<Result> {
             // -> Response not okay -> fill err field
             let errMsg = response.statusText;
 
-            if (json.data.message) {
+            if (json.data?.message) {
                 // -> message is in data
                 errMsg = json.data.message;
             }

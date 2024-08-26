@@ -24,18 +24,21 @@ enum CompareOperator {
 }
 
 interface Filter {
-    filter: {
-        property: string,
-        operator: CompareOperator,
-        value: any
-    } | Filter[],
+    property: string,
+    operator: CompareOperator,
+    value: any
+}
+export interface Filters {
+    filters: Filter[],
     and?: boolean
 }
+export type FilterType = Filter | Filters;
 
 interface OrderBy {
     property: string,
     ascending: boolean
 }
+export type OrderByType = OrderBy | OrderBy[];
 
 interface GetQueryParamsOptions {
     all?:       boolean;
@@ -45,8 +48,8 @@ interface GetQueryParamsOptions {
     select?:    boolean;
 }
 interface GetQueryParams {
-    filters?:   Filter  | Filter[];
-    orderBy?:   OrderBy | OrderBy[];
+    filters?:   FilterType;
+    orderBy?:   OrderByType;
     top?:       number;
     skip?:      number;
     select?:    string[];
@@ -434,52 +437,43 @@ function orderResponsive(orderBy: OrderBy | OrderBy[]): (a: any, b: any) => numb
 /**
  * @method filters the objects array
  * @param {any[]} obj object array you want to filter 
- * @param {Filter | Filter[]} filters that must match
+ * @param {FilterType} filters that must match
  * @returns {Array<any>} filtered object array
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 25.08.2024
  */
-function getFilteredArray(obj: any[], filters: Filter | Filter[]): Array<any> {
+function getFilteredArray(obj: any[], filters: FilterType): Array<any> {
     let filtered: any[] = obj;
 
-    if (!(filters instanceof Array)) {
-        filters = [filters];
-    }
+    if ('filters' in filters) {
+        // -> multiple filters
+        // COMING SOON
+    } else {
+        // -> single filter
+        const   property    = filters.property,
+                value       = filters.value;
 
-    for (let i = 0; i < filters.length; i++) {
-        const e = filters[i];
-        if (e.filter instanceof Array) {
-            // -> array
-            // COOMING SOON
-        } else {
-            // -> NO array
-            const   filter      = e.filter,
-                    property    = filter.property,
-                    value       = filter.value;
-
-            switch (filter.operator) {
-                case CompareOperator.Equal:
-                    filtered = filtered.filter(e => e[property] === value);
-                    break;
-                case CompareOperator.GreaterEqual:
-                    filtered = filtered.filter(e => e[property] >= value);
-                    break;
-                case CompareOperator.GreaterThan:
-                    filtered = filtered.filter(e => e[property] > value);
-                    break;
-                case CompareOperator.LessEqual:
-                    filtered = filtered.filter(e => e[property] <= value);
-                    break;
-                case CompareOperator.LessThan:
-                    filtered = filtered.filter(e => e[property] < value);
-                    break;
-                case CompareOperator.NotEqual:
-                    filtered = filtered.filter(e => e[property] !== value);
-                    break;
-            }
+        switch (filters.operator) {
+            case CompareOperator.Equal:
+                filtered = filtered.filter(e => e[property] === value);
+                break;
+            case CompareOperator.GreaterEqual:
+                filtered = filtered.filter(e => e[property] >= value);
+                break;
+            case CompareOperator.GreaterThan:
+                filtered = filtered.filter(e => e[property] > value);
+                break;
+            case CompareOperator.LessEqual:
+                filtered = filtered.filter(e => e[property] <= value);
+                break;
+            case CompareOperator.LessThan:
+                filtered = filtered.filter(e => e[property] < value);
+                break;
+            case CompareOperator.NotEqual:
+                filtered = filtered.filter(e => e[property] !== value);
+                break;
         }
-        
     }
 
     return filtered;
