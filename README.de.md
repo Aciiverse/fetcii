@@ -338,13 +338,13 @@
         if (!token) return; // no token found
 
         const url = 'http://localhost:3000/api/games',
-            result = await getcii(url, token); // fetching (async await);
+            result = await getcii(url, {}, token); // fetching (async await);
 
 #### users.deleteData()
 
 -   Lösche die Daten, die du abgespeichert hast
 
-        deleteData();
+        users.deleteData();
 
 -   Wenn du zB. initial beim Appstart prüfen willst, ob der Token abgelaufen ist, kannst du folgendes nutzen
 -   Es kommt zurück, ob der Token abgelaufen ist

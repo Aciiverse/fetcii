@@ -338,13 +338,13 @@
         if (!token) return; // no token found
 
         const url = 'http://localhost:3000/api/games',
-            result = await getcii(url, token); // fetching (async await);
+            result = await getcii(url, {}, token); // fetching (async await);
 
 #### users.deleteData()
 
 -   Delete the data you have saved
 
-        deleteData();
+        users.deleteData();
 
 -   When you start the app, you want to use whether the token has expired, you can use the following
 -   It comes back whether the token has expired

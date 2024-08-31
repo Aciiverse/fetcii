@@ -1,3 +1,5 @@
+import { users } from "./users";
+
 export enum CompareOperator {
     Equal = "eq",
     NotEqual = "neq",
@@ -41,12 +43,14 @@ interface Result {
 /**
  * @method gets the data by using the ```GET``` request
  * @param {string} url the url where you want to fetch from
+ * @param {GetOptions?} options optional filter, sorting, skip and top
+ * @param {string?} token optional the auth token
  * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
  */
-export async function getcii(url: string, options?: GetOptions): Promise<Result> {
+export async function getcii(url: string, options?: GetOptions, token?: string): Promise<Result> {
     try {
         const queryParams = new URLSearchParams();
 
@@ -84,12 +88,19 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
             }
         }
 
-        // Fire Request
+        // set header
+        const headers: HeadersInit = {
+            "Content-Type": "application/json",
+        };
+        if (token && !users.checkTokenExpired()) {
+            // -> token is set
+            headers["authorization"] = token;
+        }
+
+        // fire Request
         const response = await fetch(url, {
                 method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: headers,
             }),
             json = await response.json();
 
@@ -133,18 +144,25 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
  * @method creates an entry by using the ```POST``` request
  * @param {string} url the url where you want to fetch from
  * @param {Record<string, any>} data you want to create
+ * @param {string?} token optional the auth token
  * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
  */
-export async function createcii(url: string, data: Record<string, any>): Promise<Result> {
+export async function createcii(url: string, data: Record<string, any>, token?: string): Promise<Result> {
     try {
+        const headers: HeadersInit = {
+            "Content-Type": "application/json",
+        };
+        if (token && !users.checkTokenExpired()) {
+            // -> token is set
+            headers["authorization"] = token;
+        }
+
         const response = await fetch(url, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: headers,
                 body: JSON.stringify(data),
             }),
             json = await response.json();
@@ -189,18 +207,25 @@ export async function createcii(url: string, data: Record<string, any>): Promise
  * @method updates an entry by using the ```PUT``` request
  * @param {string} url the url where you want to fetch from
  * @param {Record<string, any>} data you want to update
+ * @param {string?} token optional the auth token
  * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
  */
-export async function updatecii(url: string, data: Record<string, any>): Promise<Result> {
+export async function updatecii(url: string, data: Record<string, any>, token?: string): Promise<Result> {
     try {
+        const headers: HeadersInit = {
+            "Content-Type": "application/json",
+        };
+        if (token && !users.checkTokenExpired()) {
+            // -> token is set
+            headers["authorization"] = token;
+        }
+
         const response = await fetch(url, {
                 method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: headers,
                 body: JSON.stringify(data),
             }),
             json = await response.json();
@@ -244,18 +269,25 @@ export async function updatecii(url: string, data: Record<string, any>): Promise
 /**
  * @method removes an entry by using the ```DELETE``` request
  * @param {string} url the url where you want to fetch from
+ * @param {string?} token optional the auth token
  * @returns {Promise<Result>} ```err``` is undefined if the function **OR** request failed; ```response.ok``` and ```response.status``` shows if the request succeeded
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 24.08.24
  */
-export async function removecii(url: string): Promise<Result> {
+export async function removecii(url: string, token?: string): Promise<Result> {
     try {
+        const headers: HeadersInit = {
+            "Content-Type": "application/json",
+        };
+        if (token && !users.checkTokenExpired()) {
+            // -> token is set
+            headers["authorization"] = token;
+        }
+
         const response = await fetch(url, {
                 method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: headers,
             }),
             json = await response.json();
 
