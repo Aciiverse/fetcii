@@ -275,3 +275,95 @@
 
             console.log(result.data?.message); // log success message
         }
+
+### Usermodul (best use with aciiFX) (user)
+
+#### users.saveData()
+
+-   Nach einem Login kannst du den Token, Tokenverfallsdatum und die Userdaten speichern:
+
+        const url = 'http://localhost:3000/api/users/login';
+
+        const result = await createcii(url, {
+            username: 'ezio',
+            password: 'mySecretPassword'
+        });
+
+        // validation
+        if (result.err) {
+            // -> error occured
+            console.error(result.err?.message); // log error
+            return;
+        }
+        const data = result.data;
+
+        // save data
+        users.saveData({
+            accessToken: data.token,
+            userData: data.user,
+            tokenExp: data.tokenExp
+        });
+
+#### users.getData()
+
+-   Die Userdaten erhalten
+
+        export interface UserData {
+            uuid: string;
+            username: string;
+            email: string;
+            registered: Date;
+            lastLogin?: Date;
+            verified: boolean;
+            isAdmin: boolean;
+        }
+
+        const data: UserData = users.getData();
+
+        if (!data) return; // no data found
+
+#### users.getToken()
+
+-   Den Access Token erhalten
+
+        const token = users.getToken();
+
+        if (!token) return; // no token found
+
+-   Mit dem Token kannst du getcii(), createcii(), updatecii() oder deletecii() ausführen.
+-   `aciiFX` hat eingebaute middlewares, die den Token automatisch konsumieren
+
+        const token = users.getToken();
+
+        if (!token) return; // no token found
+
+        const url = 'http://localhost:3000/api/games',
+            result = await getcii(url, token); // fetching (async await);
+
+#### users.deleteData()
+
+-   Lösche die Daten, die du abgespeichert hast
+
+        deleteData();
+
+-   Wenn du zB. initial beim Appstart prüfen willst, ob der Token abgelaufen ist, kannst du folgendes nutzen
+-   Es kommt zurück, ob der Token abgelaufen ist
+-   Wenn du nichts mitgibst, löscht er automatisch die Daten
+
+        users.checkTokenExpired();
+
+    oder
+
+        const expired = users.checkTokenExpired();
+
+    oder
+
+        const expired = users.checkTokenExpired(true);
+
+    oder
+
+        users.checkTokenExpired(true);
+
+-   Wenn die Daten nicht gelöscht werden sollen:
+
+        const expired = users.checkTokenExpired(false);

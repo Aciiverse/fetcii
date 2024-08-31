@@ -275,3 +275,95 @@
 
             console.log(result.data?.message); // log success message
         }
+
+### User module (best use with aciiFX) (user)
+
+#### users.saveData()
+
+-   After a login you can save the token, token drop date and the user data:
+
+        const url = 'http://localhost:3000/api/users/login';
+
+        const result = await createcii(url, {
+            username: 'ezio',
+            password: 'mySecretPassword'
+        });
+
+        // validation
+        if (result.err) {
+            // -> error occured
+            console.error(result.err?.message); // log error
+            return;
+        }
+        const data = result.data;
+
+        // save data
+        users.saveData({
+            accessToken: data.token,
+            userData: data.user,
+            tokenExp: data.tokenExp
+        });
+
+#### users.getData()
+
+-   Receive user data
+
+        export interface UserData {
+            uuid: string;
+            username: string;
+            email: string;
+            registered: Date;
+            lastLogin?: Date;
+            verified: boolean;
+            isAdmin: boolean;
+        }
+
+        const data: UserData = users.getData();
+
+        if (!data) return; // no data found
+
+#### users.getToken()
+
+-   Receive the Access Token
+
+        const token = users.getToken();
+
+        if (!token) return; // no token found
+
+-   With the token you can execute getcii(), createcii(), updatecii() or deletecii():
+-   `aciiFX` has built-in middlewares that automatically consume the token
+
+        const token = users.getToken();
+
+        if (!token) return; // no token found
+
+        const url = 'http://localhost:3000/api/games',
+            result = await getcii(url, token); // fetching (async await);
+
+#### users.deleteData()
+
+-   Delete the data you have saved
+
+        deleteData();
+
+-   When you start the app, you want to use whether the token has expired, you can use the following
+-   It comes back whether the token has expired
+-   If you don't define any parameter, it automatically deletes the data
+
+        users.checkTokenExpired();
+
+    or
+
+        const expired = users.checkTokenExpired();
+
+    or
+
+        const expired = users.checkTokenExpired(true);
+
+    or
+
+        users.checkTokenExpired(true);
+
+-   If the data should not be deleted:
+
+        const expired = users.checkTokenExpired(false);
