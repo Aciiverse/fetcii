@@ -4,47 +4,47 @@
 
 > [Here](/README.md) is the doc also in english.
 
-## Entwickler*Innen
+## Entwickler\*Innen
 
-- [Flowtastisch](https://flowtastisch.com)
+-   [Flowtastisch](https://flowtastisch.com)
 
 ## Credits
 
 ### fetcii
 
-- [javascript](https://www.javascript.com/)
-- [typescript](https://github.com/Microsoft/TypeScript)
+-   [javascript](https://www.javascript.com/)
+-   [typescript](https://github.com/Microsoft/TypeScript)
 
 ### fetcii (dev)
 
-- [concurrently](https://github.com/open-cli-tools/concurrently)
-- [express](https://github.com/expressjs/express)
+-   [concurrently](https://github.com/open-cli-tools/concurrently)
+-   [express](https://github.com/expressjs/express)
 
 ## Features
 
-- einfaches fetch Modul 🎲
-- inspiriert von odata v2 👀
-- Unterstützung der vier Haupt CRUD Methoden 📓
-- eingebautes error handling -> immer eine message 💬
-- unterstützt automatisiert filter, top, skip, select query parameter ✨
-- designed für aciiFX, aber auch anders nutzbar 🥑
+-   einfaches fetch Modul 🎲
+-   inspiriert von odata v2 👀
+-   Unterstützung der vier Haupt CRUD Methoden 📓
+-   eingebautes error handling -> immer eine message 💬
+-   unterstützt automatisiert filter, top, skip, select query parameter ✨
+-   designed für aciiFX, aber auch anders nutzbar 🥑
 
 ## Entwickeln mit fetcii
 
 ### Was du brauchst
 
-- NodeJS
-- TypeScript `npm install -g typescript`
+-   NodeJS
+-   TypeScript `npm install -g typescript`
 
 ### Installation
 
-1. Installiere das fetcii Paket (Bsp.: yarn **oder** npm)
+1.  Installiere das fetcii Paket (Bsp.: yarn **oder** npm)
 
         yarn add @aciiverse/fetcii
 
         npm i @aciiverse/fetcii
 
-2. Jetzt kannst du die Funktionen einfach importiert werden (entweder automatisch, wenn du die Funktionen wählst oder manuell oben in der Datei mit):
+2.  Jetzt kannst du die Funktionen einfach importiert werden (entweder automatisch, wenn du die Funktionen wählst oder manuell oben in der Datei mit):
 
         import { getcii } from @aciiverse/fetcii
 
@@ -74,16 +74,17 @@
             console.log(result.data?.message); // log success message
         }
 
-> Wenn nur Spiel 6 - 20 ausgegeben werden soll, kannst du ```top``` & ```skip``` nutzen:
+> Wenn nur Spiel 6 - 20 ausgegeben werden soll, kannst du `top` & `skip` nutzen:
 
         const result = await getcii(url, {
             top:    15, // get 15 games max
             skip:   5   // skip the first 5 games
         });
 
-- Die Queryparameter kommen als ```$top``` und ```$skip``` an
+-   Die Queryparameter kommen als `$top` und `$skip` an
 
-> Wenn alle Spiele absteigend nach dem ```release``` sortiert werden sollen:
+> Wenn alle Spiele absteigend nach dem `release` sortiert werden sollen:
+
         const orderBy: OrderByType = {
             property: 'release',
             ascending: false
@@ -93,9 +94,9 @@
             orderBy: orderBy
         });
 
-- Der Queryparameter kommt als ```$orderBy``` an
+-   Der Queryparameter kommt als `$orderBy` an
 
-> Wenn alle Spiele aufsteigend nach dem ```title``` -> aufsteigend nach der ```id``` sortiert werden sollen:
+> Wenn alle Spiele aufsteigend nach dem `title` -> aufsteigend nach der `id` sortiert werden sollen:
 
         const orderBy: OrderByType = [
             { property: 'title', ascending: true },
@@ -106,79 +107,79 @@
             orderBy: orderBy
         });
 
-- Der Queryparameter kommt als ```$orderBy``` an
+-   Der Queryparameter kommt als `$orderBy` an
 
-> Wenn nur der ```title``` und die ```id``` selektiert werden soll, kannst du ```select``` nutzen:
+> Wenn nur der `title` und die `id` selektiert werden soll, kannst du `select` nutzen:
 
         const result = await getcii(url, {
             select: ['title', 'id'] // select only the 'title' and 'id'
         });
 
-- Der Queryparameter kommt als ```$select``` an
+-   Der Queryparameter kommt als `$select` an
 
-> Wenn gefiltert werden soll, kann der neue Filtertyp mit dem Property ```filter``` verwendet werden:
+> Wenn gefiltert werden soll, kann der neue Filtertyp mit dem Property `filter` verwendet werden:
 
-- Alle Spiele mit der id 1:
+-   Alle Spiele mit der id 1:
 
-        const filter: FilterType = {
-            operator: CompareOperator.Equal,
-            property: 'id',
-            value: 1
-        };
+          const filter: FilterType = {
+              operator: CompareOperator.Equal,
+              property: 'id',
+              value: 1
+          };
 
-- Alle Spiele namens 'Minecraft' **oder** 'Portal 2':
+-   Alle Spiele namens 'Minecraft' **oder** 'Portal 2':
 
-        const filter: FilterType = {
-            filters: [
-                {
-                    operator: CompareOperator.Equal,
-                    property: 'title',
-                    value: 'Minecraft'
-                },
-                {
-                    operator: CompareOperator.Equal,
-                    property: 'title',
-                    value: 'Portal 2'
-                }
-            ],
-            and: false
-        };
+          const filter: FilterType = {
+              filters: [
+                  {
+                      operator: CompareOperator.Equal,
+                      property: 'title',
+                      value: 'Minecraft'
+                  },
+                  {
+                      operator: CompareOperator.Equal,
+                      property: 'title',
+                      value: 'Portal 2'
+                  }
+              ],
+              and: false
+          };
 
-- Alle Spiele namens 'Minecraft' **oder** zwischen 2020 **und** 2028 erschienen
+-   Alle Spiele namens 'Minecraft' **oder** zwischen 2020 **und** 2028 erschienen
 
-        const filter: FilterType = {
-            filters: [
-                {
-                    filters: [
-                        {
-                            operator: CompareOperator.GreaterEqual,
-                            property: 'release',
-                            value: 2020
-                        },
-                        {
-                            operator: CompareOperator.LessEqual,
-                            property: 'release',
-                            value: 2028
-                        }
-                    ],
-                    and: true
-                },
-                {
-                    operator: CompareOperator.Equal,
-                    property: 'title',
-                    value: 'Minecraft'
-                }
-            ],
-            and: false
-        };
+          const filter: FilterType = {
+              filters: [
+                  {
+                      filters: [
+                          {
+                              operator: CompareOperator.GreaterEqual,
+                              property: 'release',
+                              value: 2020
+                          },
+                          {
+                              operator: CompareOperator.LessEqual,
+                              property: 'release',
+                              value: 2028
+                          }
+                      ],
+                      and: true
+                  },
+                  {
+                      operator: CompareOperator.Equal,
+                      property: 'title',
+                      value: 'Minecraft'
+                  }
+              ],
+              and: false
+          };
 
-- Filter zuweisen:
+-   Filter zuweisen:
 
-        const result = await getcii(url, {
-            filter: filters // set filter
-        });
+          const result = await getcii(url, {
+              filter: filters // set filter
+          });
 
-- Der Queryparameter kommt als ```$filters``` an
+-   Der Queryparameter kommt als `$filters` an
 
 #### Hole dir ein einzelnes Spiel
 
@@ -259,7 +260,7 @@
 #### Lösche ein Spiel
 
         import { removecii } from '@aciiverse/fetcii';
-    
+
         const   url = 'http://localhost:3000/api/games/:id'; // api url
 
         const result = await removecii(url); // fetching (async await)
@@ -274,3 +275,95 @@
 
             console.log(result.data?.message); // log success message
         }
+
+### Usermodul (best use with aciiFX) (user)
+
+#### users.saveData()
+
+-   Nach einem Login kannst du den Token, Tokenverfallsdatum und die Userdaten speichern:
+
+        const url = 'http://localhost:3000/api/users/login';
+
+        const result = await createcii(url, {
+            username: 'ezio',
+            password: 'mySecretPassword'
+        });
+
+        // validation
+        if (result.err) {
+            // -> error occured
+            console.error(result.err?.message); // log error
+            return;
+        }
+        const data = result.data;
+
+        // save data
+        users.saveData({
+            accessToken: data.token,
+            userData: data.user,
+            tokenExp: data.tokenExp
+        });
+
+#### users.getData()
+
+-   Die Userdaten erhalten
+
+        export interface UserData {
+            uuid: string;
+            username: string;
+            email: string;
+            registered: Date;
+            lastLogin?: Date;
+            verified: boolean;
+            isAdmin: boolean;
+        }
+
+        const data: UserData = users.getData();
+
+        if (!data) return; // no data found
+
+#### users.getToken()
+
+-   Den Access Token erhalten
+
+        const token = users.getToken();
+
+        if (!token) return; // no token found
+
+-   Mit dem Token kannst du getcii(), createcii(), updatecii() oder deletecii() ausführen.
+-   `aciiFX` hat eingebaute middlewares, die den Token automatisch konsumieren
+
+        const token = users.getToken();
+
+        if (!token) return; // no token found
+
+        const url = 'http://localhost:3000/api/games',
+            result = await getcii(url, token); // fetching (async await);
+
+#### users.deleteData()
+
+-   Lösche die Daten, die du abgespeichert hast
+
+        deleteData();
+
+-   Wenn du zB. initial beim Appstart prüfen willst, ob der Token abgelaufen ist, kannst du folgendes nutzen
+-   Es kommt zurück, ob der Token abgelaufen ist
+-   Wenn du nichts mitgibst, löscht er automatisch die Daten
+
+        users.checkTokenExpired();
+
+    oder
+
+        const expired = users.checkTokenExpired();
+
+    oder
+
+        const expired = users.checkTokenExpired(true);
+
+    oder
+
+        users.checkTokenExpired(true);
+
+-   Wenn die Daten nicht gelöscht werden sollen:
+
+        const expired = users.checkTokenExpired(false);

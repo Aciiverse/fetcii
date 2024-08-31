@@ -1,41 +1,41 @@
 export enum CompareOperator {
-    Equal           = 'eq',
-    NotEqual        = 'neq',
-    GreaterThan     = 'gt',
-    GreaterEqual    = 'ge',
-    LessThan        = 'lt',
-    LessEqual       = 'le',
+    Equal = "eq",
+    NotEqual = "neq",
+    GreaterThan = "gt",
+    GreaterEqual = "ge",
+    LessThan = "lt",
+    LessEqual = "le",
 }
 
 interface Filter {
-    property: string,
-    operator: CompareOperator,
-    value: any
+    property: string;
+    operator: CompareOperator;
+    value: any;
 }
 interface Filters {
-    filters: Filter[],
-    and?: boolean
+    filters: Filter[];
+    and?: boolean;
 }
 export type FilterType = Filter | Filters;
 
 interface OrderBy {
-    property: string,
-    ascending: boolean
+    property: string;
+    ascending: boolean;
 }
 export type OrderByType = OrderBy | OrderBy[];
 
 export interface GetOptions {
-    filters?: FilterType,
-    select?: string[],
-    orderBy?: OrderByType,
-    top?:   number,
-    skip?:  number
+    filters?: FilterType;
+    select?: string[];
+    orderBy?: OrderByType;
+    top?: number;
+    skip?: number;
 }
 
 interface Result {
-    response?: Response,
-    data?: any,
-    err?: Error
+    response?: Response;
+    data?: any;
+    err?: Error;
 }
 
 /**
@@ -55,29 +55,29 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
             // -> options defined
             if (options.filters) {
                 // -> filters exists
-                queryParams.append('$filters', JSON.stringify(options.filters));
+                queryParams.append("$filters", JSON.stringify(options.filters));
             }
-    
+
             if (options.top) {
                 // -> top exists
-                queryParams.append('$top', String(options.top));
+                queryParams.append("$top", String(options.top));
             }
 
             if (options.skip) {
                 // -> skip exists
-                queryParams.append('$skip', String(options.skip));
+                queryParams.append("$skip", String(options.skip));
             }
 
             if (options.orderBy) {
                 // -> orderBy exists
-                queryParams.append('$orderBy', JSON.stringify(options.orderBy));
+                queryParams.append("$orderBy", JSON.stringify(options.orderBy));
             }
 
             if (options.select) {
                 // -> select exists
-                queryParams.append('$select', JSON.stringify(options.select));
+                queryParams.append("$select", JSON.stringify(options.select));
             }
-    
+
             if (queryParams.size > 0) {
                 // -> queryParams exists -> add params to url
                 url = `${url}/?${String(queryParams)}`;
@@ -85,13 +85,13 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
         }
 
         // Fire Request
-        const   response = await fetch(url, {
-                    method: 'GET',
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }),
-                json = await response.json();
+        const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }),
+            json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
@@ -104,27 +104,26 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
             return {
                 response: response,
                 data: json,
-                err: new Error(errMsg)
+                err: new Error(errMsg),
             };
         }
 
         return {
             response: response,
-            data: json
+            data: json,
         };
-
     } catch (err) {
         if (err instanceof Error) {
             // -> is error
             console.error(err.message);
             return {
-                err: err
+                err: err,
             };
         } else {
             // -> is unknown
             console.error(err);
             return {
-                err: new Error(`Unknown Error while fetching: ${err}`)
+                err: new Error(`Unknown Error while fetching: ${err}`),
             };
         }
     }
@@ -141,14 +140,14 @@ export async function getcii(url: string, options?: GetOptions): Promise<Result>
  */
 export async function createcii(url: string, data: Record<string, any>): Promise<Result> {
     try {
-        const   response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                }),
-                json = await response.json();
+        const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            }),
+            json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
@@ -161,27 +160,26 @@ export async function createcii(url: string, data: Record<string, any>): Promise
             return {
                 response: response,
                 data: json,
-                err: new Error(errMsg)
+                err: new Error(errMsg),
             };
         }
 
         return {
             response: response,
-            data: json
+            data: json,
         };
-
     } catch (err) {
         if (err instanceof Error) {
             // -> is error
             console.error(err.message);
             return {
-                err: err
+                err: err,
             };
         } else {
             // -> is unknown
             console.error(err);
             return {
-                err: new Error(`Unknown Error while fetching: ${err}`)
+                err: new Error(`Unknown Error while fetching: ${err}`),
             };
         }
     }
@@ -198,15 +196,14 @@ export async function createcii(url: string, data: Record<string, any>): Promise
  */
 export async function updatecii(url: string, data: Record<string, any>): Promise<Result> {
     try {
-
-        const   response = await fetch(url, {
-                    method: 'PUT',
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(data)
-                }),
-                json = await response.json();
+        const response = await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            }),
+            json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
@@ -219,27 +216,26 @@ export async function updatecii(url: string, data: Record<string, any>): Promise
             return {
                 response: response,
                 data: json,
-                err: new Error(errMsg)
+                err: new Error(errMsg),
             };
         }
 
         return {
             response: response,
-            data: json
+            data: json,
         };
-
     } catch (err) {
         if (err instanceof Error) {
             // -> is error
             console.error(err.message);
             return {
-                err: err
+                err: err,
             };
         } else {
             // -> is unknown
             console.error(err);
             return {
-                err: new Error(`Unknown Error while fetching: ${err}`)
+                err: new Error(`Unknown Error while fetching: ${err}`),
             };
         }
     }
@@ -255,14 +251,13 @@ export async function updatecii(url: string, data: Record<string, any>): Promise
  */
 export async function removecii(url: string): Promise<Result> {
     try {
-
-        const   response = await fetch(url, {
-                    method: 'DELETE',
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                }),
-                json = await response.json();
+        const response = await fetch(url, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }),
+            json = await response.json();
 
         if (!response.ok) {
             // -> Response not okay -> fill err field
@@ -275,27 +270,26 @@ export async function removecii(url: string): Promise<Result> {
             return {
                 response: response,
                 data: json,
-                err: new Error(errMsg)
+                err: new Error(errMsg),
             };
         }
 
         return {
             response: response,
-            data: json
+            data: json,
         };
-
     } catch (err) {
         if (err instanceof Error) {
             // -> is error
             console.error(err.message);
             return {
-                err: err
+                err: err,
             };
         } else {
             // -> is unknown
             console.error(err);
             return {
-                err: new Error(`Unknown Error while fetching: ${err}`)
+                err: new Error(`Unknown Error while fetching: ${err}`),
             };
         }
     }
