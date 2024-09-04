@@ -349,7 +349,7 @@ export async function removecii(url: string, token?: string): Promise<Result> {
 
 /**
  * @method saves the login data and the token in the local storage
- * @param {SaveData} data includes `accessToken`: auth token; `userData`; `tokenExp`: date when the token expires
+ * @param {SaveData} data includes `accessToken`: auth token; `userData`; `token_expire`: date when the token expires
  * @author Flowtastisch
  * @memberof Aciiverse
  * @date 31.08.24
@@ -357,12 +357,9 @@ export async function removecii(url: string, token?: string): Promise<Result> {
 export function saveData(data: SaveData) {
     if (typeof window === "undefined") return;
 
-    window.localStorage.setItem(
-        "access_token",
-        JSON.stringify(data.accessToken)
-    );
+    window.localStorage.setItem("access_token", data.accessToken);
     window.localStorage.setItem("userData", JSON.stringify(data.userData));
-    window.localStorage.setItem("tokenExp", JSON.stringify(data.tokenExp));
+    window.localStorage.setItem("token_expire", data.tokenExp.toISOString());
 }
 
 /**
@@ -388,13 +385,13 @@ export function getData(): UserData | undefined {
  * @memberof Aciiverse
  * @date 31.08.24
  */
-export function getToken(): UserData | undefined {
+export function getToken(): string | undefined {
     if (typeof window === "undefined") return;
 
     const userData = window.localStorage.getItem("access_token");
     if (!userData) return undefined;
 
-    return JSON.parse(userData);
+    return userData;
 }
 
 /**
@@ -428,7 +425,7 @@ export function checkTokenExpired(deleteDataIfUnvalid = true): boolean {
 
     if (!localTokenExp) return true;
 
-    const tokenExp = new Date(Number(localTokenExp)),
+    const tokenExp = new Date(localTokenExp),
         today = new Date();
 
     if (tokenExp > today) return false; // -> token valid
