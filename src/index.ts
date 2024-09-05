@@ -120,9 +120,9 @@ export async function getcii(
             // -> Response not okay -> fill err field
             let errMsg = response.statusText;
 
-            if (json.data?.message) {
+            if (json.message) {
                 // -> message is in data
-                errMsg = json.data.message;
+                errMsg = json.message;
             }
             return {
                 response: response,
@@ -187,9 +187,9 @@ export async function createcii(
             // -> Response not okay -> fill err field
             let errMsg = response.statusText;
 
-            if (json.data?.message) {
+            if (json.message) {
                 // -> message is in data
-                errMsg = json.data.message;
+                errMsg = json.message;
             }
             return {
                 response: response,
@@ -254,9 +254,9 @@ export async function updatecii(
             // -> Response not okay -> fill err field
             let errMsg = response.statusText;
 
-            if (json.data?.message) {
+            if (json.message) {
                 // -> message is in data
-                errMsg = json.data.message;
+                errMsg = json.message;
             }
             return {
                 response: response,
@@ -315,9 +315,9 @@ export async function removecii(url: string, token?: string): Promise<Result> {
             // -> Response not okay -> fill err field
             let errMsg = response.statusText;
 
-            if (json.data?.message) {
+            if (json.message) {
                 // -> message is in data
-                errMsg = json.data.message;
+                errMsg = json.message;
             }
             return {
                 response: response,
