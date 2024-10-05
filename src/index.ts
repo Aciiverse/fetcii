@@ -1,54 +1,51 @@
-export enum CompareOperator {
-    Equal = "eq",
-    NotEqual = "neq",
-    GreaterThan = "gt",
-    GreaterEqual = "ge",
-    LessThan = "lt",
-    LessEqual = "le",
-}
+import { users as usersModule } from "./users";
 
-interface Filter {
-    property: string;
-    operator: CompareOperator;
-    value: any;
-}
-interface Filters {
-    filters: Filter[];
-    and?: boolean;
-}
-export type FilterType = Filter | Filters;
-
-interface OrderBy {
-    property: string;
-    ascending: boolean;
-}
-export type OrderByType = OrderBy | OrderBy[];
-
-export interface GetOptions {
-    filters?: FilterType;
-    select?: string[];
-    orderBy?: OrderByType;
-    top?: number;
-    skip?: number;
-}
-
-interface Result {
-    response?: Response;
-    data?: any;
-    err?: Error;
-}
-
-export interface UserData {
-    [key: string]: any;
-}
-
-export interface SaveData {
-    accessToken: string;
-    userData: UserData;
-    tokenExp: Date;
-}
+// export fetcii's users module
 
 export module fetcii {
+    // export fetcii's users module
+    export const users = usersModule;
+
+    export enum CompareOperator {
+        Equal = "eq",
+        NotEqual = "neq",
+        GreaterThan = "gt",
+        GreaterEqual = "ge",
+        LessThan = "lt",
+        LessEqual = "le",
+    }
+
+    interface Filter {
+        property: string;
+        operator: CompareOperator;
+        value: any;
+    }
+    interface Filters {
+        filters: Filter[];
+        and?: boolean;
+    }
+    export type FilterType = Filter | Filters;
+
+    interface OrderBy {
+        property: string;
+        ascending: boolean;
+    }
+    export type OrderByType = OrderBy | OrderBy[];
+
+    export interface GetOptions {
+        filters?: FilterType;
+        select?: string[];
+        orderBy?: OrderByType;
+        top?: number;
+        skip?: number;
+    }
+
+    interface Result {
+        response?: Response;
+        data?: any;
+        err?: Error;
+    }
+
     /**
      * @method gets the data by using the ```GET``` request
      * @param {string} url the url where you want to fetch from
@@ -114,7 +111,7 @@ export module fetcii {
             const headers: HeadersInit = {
                 "Content-Type": "application/json",
             };
-            if (token && !checkTokenExpired()) {
+            if (token && !users.checkTokenExpired()) {
                 // -> token is set
                 headers["authorization"] = token;
             }
@@ -181,7 +178,7 @@ export module fetcii {
             const headers: HeadersInit = {
                 "Content-Type": "application/json",
             };
-            if (token && !checkTokenExpired()) {
+            if (token && !users.checkTokenExpired()) {
                 // -> token is set
                 headers["authorization"] = token;
             }
@@ -248,7 +245,7 @@ export module fetcii {
             const headers: HeadersInit = {
                 "Content-Type": "application/json",
             };
-            if (token && !checkTokenExpired()) {
+            if (token && !users.checkTokenExpired()) {
                 // -> token is set
                 headers["authorization"] = token;
             }
@@ -313,7 +310,7 @@ export module fetcii {
             const headers: HeadersInit = {
                 "Content-Type": "application/json",
             };
-            if (token && !checkTokenExpired()) {
+            if (token && !users.checkTokenExpired()) {
                 // -> token is set
                 headers["authorization"] = token;
             }
@@ -358,97 +355,5 @@ export module fetcii {
                 };
             }
         }
-    }
-
-    /**
-     * @method saves the login data and the token in the local storage
-     * @param {SaveData} data includes `accessToken`: auth token; `userData`; `token_expire`: date when the token expires
-     * @author Flowtastisch
-     * @memberof Aciiverse
-     * @date 31.08.24
-     */
-    export function saveData(data: SaveData) {
-        if (typeof window === "undefined") return;
-
-        window.localStorage.setItem("access_token", data.accessToken);
-        window.localStorage.setItem("userData", JSON.stringify(data.userData));
-        window.localStorage.setItem(
-            "token_expire",
-            data.tokenExp.toISOString()
-        );
-    }
-
-    /**
-     * @method gets the user data
-     * @returns {users.UserData | undefined} the userdata object
-     * @author Flowtastisch
-     * @memberof Aciiverse
-     * @date 31.08.24
-     */
-    export function getData(): UserData | undefined {
-        if (typeof window === "undefined") return;
-
-        const userData = window.localStorage.getItem("userData");
-        if (!userData) return undefined;
-
-        return JSON.parse(userData);
-    }
-
-    /**
-     * @method gets the auth token
-     * @returns {string} auth token
-     * @author Flowtastisch
-     * @memberof Aciiverse
-     * @date 31.08.24
-     */
-    export function getToken(): string | undefined {
-        if (typeof window === "undefined") return;
-
-        const userData = window.localStorage.getItem("access_token");
-        if (!userData) return undefined;
-
-        return userData;
-    }
-
-    /**
-     * @method logouts the user
-     * @author Flowtastisch
-     * @memberof Aciiverse
-     * @date 31.08.24
-     */
-    export function deleteData() {
-        if (typeof window === "undefined") return;
-        const localStorage = window.localStorage;
-
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("userData");
-        localStorage.removeItem("token_expire");
-    }
-
-    /**
-     * @method check if the token is valid -> standard: logout if token is expired
-     * @param [deleteDataIfUnvalid=true] optional param: if `not set`: `true`
-     * @returns {boolean} `true`: token expired & `false`: token valid
-     * @author Flowtastisch
-     * @memberof Aciiverse
-     * @date 31.08.24
-     */
-    export function checkTokenExpired(deleteDataIfUnvalid = true): boolean {
-        if (typeof window === "undefined") return true;
-
-        const localStorage = window.localStorage,
-            localTokenExp = localStorage.getItem("token_expire");
-
-        if (!localTokenExp) return true;
-
-        const tokenExp = new Date(localTokenExp),
-            today = new Date();
-
-        if (tokenExp > today) return false; // -> token valid
-
-        if (deleteDataIfUnvalid) {
-            deleteData();
-        }
-        return true;
     }
 }
