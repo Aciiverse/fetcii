@@ -1,6 +1,6 @@
-import assert = require("node:assert");
 import { describe, it } from "node:test";
-import { CompareOperator, createcii, getcii, OrderByType, removecii, updatecii } from "..";
+import { CompareOperator, fetcii, OrderByType } from "@aciiverse/fetcii";
+import assert = require("node:assert");
 
 interface BasicResponse {
     message: string;
@@ -21,7 +21,7 @@ const baseUrl = "http://localhost:3000/api";
 // getcii BEGIN
 describe("getcii dummy api started", () => {
     it("have valid data", async () => {
-        const result = await getcii(baseUrl);
+        const result = await fetcii.getcii(baseUrl);
 
         assert(!result.err, "response is valid (!err)");
         assert(result.response?.ok, "response is valid (response.ok)");
@@ -34,7 +34,7 @@ describe("getcii dummy api started", () => {
 
 describe("getcii all games", () => {
     it("founded", async () => {
-        const result = await getcii(`${baseUrl}/games`);
+        const result = await fetcii.getcii(`${baseUrl}/games`);
 
         assert(!result.err, "response is valid (!err)");
         assert(result.response?.ok, "response is valid (response.ok)");
@@ -50,7 +50,7 @@ describe("getcii all games", () => {
 
 describe("getcii 15 games", () => {
     it("founded", async () => {
-        const result = await getcii(`${baseUrl}/games`, {
+        const result = await fetcii.getcii(`${baseUrl}/games`, {
             top: 15,
         });
 
@@ -68,7 +68,7 @@ describe("getcii 15 games", () => {
 
 describe("getcii game 6 - 20", () => {
     it("founded", async () => {
-        const result = await getcii(`${baseUrl}/games`, {
+        const result = await fetcii.getcii(`${baseUrl}/games`, {
             top: 15,
             skip: 5,
         });
@@ -78,7 +78,6 @@ describe("getcii game 6 - 20", () => {
 
         const data: BasicResponse = result.data;
         assert(data.message, "message is defined");
-
         const games: Game[] = data.data;
 
         assert.equal(games.length, 15, "all 15 games founded");
@@ -89,7 +88,7 @@ describe("getcii game 6 - 20", () => {
 
 describe("getcii game select only id, title and release", () => {
     it("founded", async () => {
-        const result = await getcii(`${baseUrl}/games`, {
+        const result = await fetcii.getcii(`${baseUrl}/games`, {
             select: ["id", "title", "release"],
         });
 
@@ -110,8 +109,14 @@ describe("getcii game select only id, title and release", () => {
         assert(games[19].release, "last: release defined");
         assert(!games[0].description, "first: description undefined");
         assert(!games[19].description, "last: description undefined");
-        assert(!games[0].developingLanguage, "first: developingLanguage undefined");
-        assert(!games[19].developingLanguage, "last: developingLanguage undefined");
+        assert(
+            !games[0].developingLanguage,
+            "first: developingLanguage undefined"
+        );
+        assert(
+            !games[19].developingLanguage,
+            "last: developingLanguage undefined"
+        );
         assert(!games[0].developer, "first: developer undefined");
         assert(!games[19].developer, "last: developer undefined");
     });
@@ -124,8 +129,8 @@ describe("getcii game orderBy release desc, developingLanguage asc, title asc", 
                 { property: "developingLanguage", ascending: true },
                 { property: "title", ascending: true },
             ],
-            result = await getcii(`${baseUrl}/games`),
-            sortedResult = await getcii(`${baseUrl}/games`, {
+            result = await fetcii.getcii(`${baseUrl}/games`),
+            sortedResult = await fetcii.getcii(`${baseUrl}/games`, {
                 orderBy: orderBy,
             });
 
@@ -169,8 +174,8 @@ describe("getcii game orderBy release desc, developingLanguage asc, title asc", 
 
 describe("getcii game orderBy id desc", () => {
     it("founded", async () => {
-        const result = await getcii(`${baseUrl}/games`),
-            sortedResult = await getcii(`${baseUrl}/games`, {
+        const result = await fetcii.getcii(`${baseUrl}/games`),
+            sortedResult = await fetcii.getcii(`${baseUrl}/games`, {
                 orderBy: { property: "id", ascending: false },
             });
 
@@ -199,8 +204,8 @@ describe("getcii game orderBy id desc", () => {
 
 describe("getcii game filtered on release in 2020", () => {
     it("founded", async () => {
-        const result = await getcii(`${baseUrl}/games`),
-            filteredResult = await getcii(`${baseUrl}/games`, {
+        const result = await fetcii.getcii(`${baseUrl}/games`),
+            filteredResult = await fetcii.getcii(`${baseUrl}/games`, {
                 filters: {
                     property: "release",
                     operator: CompareOperator.Equal,
@@ -220,14 +225,18 @@ describe("getcii game filtered on release in 2020", () => {
             comparedGames = games.filter((e) => e.release === "2020");
 
         assert.equal(filteredGames.length, 7, "all 7 filtered games founded");
-        assert.deepEqual(filteredGames, comparedGames, "all 7 filtered games are equal");
+        assert.deepEqual(
+            filteredGames,
+            comparedGames,
+            "all 7 filtered games are equal"
+        );
     });
 });
 
 describe("getcii a single game", () => {
     it("founded", async () => {
         const gameId = 1,
-            result = await getcii(`${baseUrl}/games/${gameId}`);
+            result = await fetcii.getcii(`${baseUrl}/games/${gameId}`);
 
         assert(!result.err, "response is valid (!err)");
         assert(result.response?.ok, "response is valid (response.ok)");
@@ -244,12 +253,16 @@ describe("getcii a single game", () => {
 describe("getcii NOT a single game", () => {
     it("founded", async () => {
         const gameId = 22,
-            result = await getcii(`${baseUrl}/games/${gameId}`);
+            result = await fetcii.getcii(`${baseUrl}/games/${gameId}`);
 
         assert(result.err, "response is valid (!err)");
         assert(!result.response?.ok, "response is valid (response.ok)");
         assert(result.data, "data is undefined");
-        assert.equal(typeof result.err.message, "string", "error message is defined");
+        assert.equal(
+            typeof result.err?.message,
+            "string",
+            "error message is defined"
+        );
     });
 });
 // getcii END
@@ -265,7 +278,7 @@ describe("createcii a game", () => {
                 release: "2024",
             },
             newGameCompared = newGame as Game,
-            result = await createcii(`${baseUrl}/games`, newGame);
+            result = await fetcii.createcii(`${baseUrl}/games`, newGame);
 
         assert(!result.err, "response is valid (!err)");
         assert(result.response?.ok, "response is valid (response.ok)");
@@ -276,7 +289,11 @@ describe("createcii a game", () => {
         assert(data.data, "data is defined");
 
         newGameCompared.id = 21;
-        assert.deepEqual(data.data, newGameCompared, "new game is equal the new game data");
+        assert.deepEqual(
+            data.data,
+            newGameCompared,
+            "new game is equal the new game data"
+        );
     });
 });
 
@@ -288,12 +305,11 @@ describe("createcii a game without neccessary property (failing attempt)", () =>
                 developingLanguage: "AnvilNext 2.0",
                 release: "2024",
             },
-            result = await createcii(`${baseUrl}/games`, newGame);
+            result = await fetcii.createcii(`${baseUrl}/games`, newGame);
 
         assert(result.err, "response is unvalid (err)");
         assert(!result.response?.ok, "response is unvalid (!response.ok)");
         assert.equal(result.response?.status, 406, "status is 406");
-
         const data: BasicResponse = result.data;
         assert(data.message, "message is defined");
         assert(!data.data, "data is NOT defined");
@@ -313,7 +329,10 @@ describe("updatecii a game", () => {
             },
             gameId = 1,
             updatedGameCompared = updatedGame as Game,
-            result = await updatecii(`${baseUrl}/games/${gameId}`, updatedGame);
+            result = await fetcii.updatecii(
+                `${baseUrl}/games/${gameId}`,
+                updatedGame
+            );
 
         assert(!result.err, "response is valid (!err)");
         assert(result.response?.ok, "response is valid (response.ok)");
@@ -324,7 +343,11 @@ describe("updatecii a game", () => {
         assert(data.data, "data is defined");
 
         updatedGameCompared.id = gameId;
-        assert.deepEqual(data.data, updatedGameCompared, "new game is equal the new game data");
+        assert.deepEqual(
+            data.data,
+            updatedGameCompared,
+            "new game is equal the new game data"
+        );
     });
 });
 
@@ -338,7 +361,10 @@ describe("updatecii a game that doesn`t exist (failing attempt)", () => {
                 release: "2024",
             },
             gameId = 30,
-            result = await updatecii(`${baseUrl}/games/${gameId}`, updatedGame);
+            result = await fetcii.updatecii(
+                `${baseUrl}/games/${gameId}`,
+                updatedGame
+            );
 
         assert(result.err, "response is unvalid (err)");
         assert(!result.response?.ok, "response is unvalid (!response.ok)");
@@ -355,7 +381,7 @@ describe("updatecii a game that doesn`t exist (failing attempt)", () => {
 describe("removecii a game", () => {
     it("founded", async () => {
         const gameId = 1,
-            result = await removecii(`${baseUrl}/games/${gameId}`);
+            result = await fetcii.removecii(`${baseUrl}/games/${gameId}`);
 
         assert(!result.err, "response is valid (!err)");
         assert(result.response?.ok, "response is valid (response.ok)");
@@ -370,11 +396,15 @@ describe("removecii a game", () => {
 describe("removecii a game (failing attempt)", () => {
     it("founded", async () => {
         const gameId = 31,
-            result = await removecii(`${baseUrl}/games/${gameId}`);
+            result = await fetcii.removecii(`${baseUrl}/games/${gameId}`);
 
         assert(result.err, "response is unvalid (err)");
         assert(!result.response?.ok, "response is unvalid (!response.ok)");
-        assert.equal(result.response?.status, 404, "status is 404 -> game not found");
+        assert.equal(
+            result.response?.status,
+            404,
+            "status is 404 -> game not found"
+        );
 
         const data: BasicResponse = result.data;
         assert(data.message, "message is defined");
