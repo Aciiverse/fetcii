@@ -1,5 +1,5 @@
 import { describe, it } from "node:test";
-import { CompareOperator, fetcii, OrderByType } from "@aciiverse/fetcii";
+import { fetcii } from "@aciiverse/fetcii";
 import assert = require("node:assert");
 
 interface BasicResponse {
@@ -124,7 +124,7 @@ describe("getcii game select only id, title and release", () => {
 
 describe("getcii game orderBy release desc, developingLanguage asc, title asc", () => {
     it("founded", async () => {
-        const orderBy: OrderByType = [
+        const orderBy: fetcii.OrderByType = [
                 { property: "release", ascending: false },
                 { property: "developingLanguage", ascending: true },
                 { property: "title", ascending: true },
@@ -208,7 +208,7 @@ describe("getcii game filtered on release in 2020", () => {
             filteredResult = await fetcii.getcii(`${baseUrl}/games`, {
                 filters: {
                     property: "release",
-                    operator: CompareOperator.Equal,
+                    operator: fetcii.CompareOperator.Equal,
                     value: "2020",
                 },
             });
