@@ -1,6 +1,6 @@
 {
   "name": "@aciiverse/fetcii",
-  "version": "1.1.5",
+  "version": "1.2.0",
   "description": "Simple fetch module primary designed for the aciifx backend",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -25,12 +25,11 @@
     "start": "node dist/index.js",
     "build": "tsc",
     "build:watch": "tsc --watch",
-    "test": "tsc && node --test",
     "test:api:": "concurrently \"tsc --watch -p api/tsconfig.json\" \"node --watch api/dist/index.js\" "
   },
   "files": [
     "dist",
-    "!dist/test/",
+    "!test",
     "LICENCE"
   ],
   "devDependencies": {

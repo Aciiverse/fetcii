@@ -44,9 +44,9 @@
 
         npm i @aciiverse/fetcii
 
-2.  Now you can simply import the functions (either automatically if you choose the functions or manually in the file with):
+2.  Now you can simply import fetcii:
 
-        import { getcii } from @aciiverse/fetcii
+        import { fetcii } from "@aciiverse/fetcii";
 
 ## Develop
 
@@ -56,11 +56,11 @@
 
 #### Get all games
 
-        import { getcii } from '@aciiverse/fetcii';
+        import { fetcii } from "@aciiverse/fetcii";
 
         const url = 'http://localhost:3000/api/games'; // api url
 
-        const result = await getcii(url); // fetching (async await)
+        const result = await fetcii.getcii(url); // fetching (async await)
 
         if (result.err) {
             // -> error occured while fetching (frontend or backend)
@@ -76,7 +76,7 @@
 
 > if only game 6-20 is to be output, you can use `top` & `skip`:
 
-        const result = await getcii(url, {
+        const result = await fetcii.getcii(url, {
             top:    15, // get 15 games max
             skip:   5   // skip the first 5 games
         });
@@ -90,7 +90,7 @@
             ascending: false
         };
 
-        const result = await getcii(url, {
+        const result = await fetcii.getcii(url, {
             orderBy: orderBy
         });
 
@@ -103,7 +103,7 @@
             { property: 'id', ascending: true }
         ];
 
-        const result = await getcii(url, {
+        const result = await fetcii.getcii(url, {
             orderBy: orderBy
         });
 
@@ -111,7 +111,7 @@
 
 > if only the `title` and the `id` should be selected, you can use `select` :
 
-        const result = await getcii(url, {
+        const result = await fetcii.getcii(url, {
             select: ['title', 'id'] // select only the 'title' and 'id'
         });
 
@@ -122,7 +122,7 @@
 -   all games with the id 1:
 
           const filter: FilterType = {
-              operator: CompareOperator.Equal,
+              operator: fetcii.CompareOperator.Equal,
               property: 'id',
               value: 1
           };
@@ -132,12 +132,12 @@
           const filter: FilterType = {
               filters: [
                   {
-                      operator: CompareOperator.Equal,
+                      operator: fetcii.CompareOperator.Equal,
                       property: 'title',
                       value: 'Minecraft'
                   },
                   {
-                      operator: CompareOperator.Equal,
+                      operator: fetcii.CompareOperator.Equal,
                       property: 'title',
                       value: 'Portal 2'
                   }
@@ -152,12 +152,12 @@
                   {
                       filters: [
                           {
-                              operator: CompareOperator.GreaterEqual,
+                              operator: fetcii.CompareOperator.GreaterEqual,
                               property: 'release',
                               value: 2020
                           },
                           {
-                              operator: CompareOperator.LessEqual,
+                              operator: fetcii.CompareOperator.LessEqual,
                               property: 'release',
                               value: 2028
                           }
@@ -165,7 +165,7 @@
                       and: true
                   },
                   {
-                      operator: CompareOperator.Equal,
+                      operator: fetcii.CompareOperator.Equal,
                       property: 'title',
                       value: 'Minecraft'
                   }
@@ -175,7 +175,7 @@
 
 -   assign filters:
 
-          const result = await getcii(url, {
+          const result = await fetcii.getcii(url, {
               filter: filters // set filter
           });
 
@@ -183,11 +183,11 @@
 
 #### Get a single game
 
-        import { getcii } from '@aciiverse/fetcii';
+        import { fetcii } from "@aciiverse/fetcii";
 
         const url = 'http://localhost:3000/api/games/:id'; // api url
 
-        const result = await getcii(url); // fetching (async await)
+        const result = await fetcii.getcii(url); // fetching (async await)
 
         if (result.err) {
             // -> error occured while fetching (frontend or backend)
@@ -205,7 +205,7 @@
 
 #### Create a game
 
-        import { createcii } from '@aciiverse/fetcii';
+        import { fetcii } from "@aciiverse/fetcii";
 
         const   url = 'http://localhost:3000/api/games', // api url
                 data: Omit<Game, 'id'> = { // 'Omit' bewirkt, dass der type 'Game' ohne das property 'id' benutzt wird (typescript)
@@ -214,7 +214,7 @@
                     release: 2011
                 };
 
-        const result = await createcii(url, data); // fetching (async await)
+        const result = await fetcii.createcii(url, data); // fetching (async await)
 
         if (result.err) {
             // -> error occured while fetching (frontend or backend)
@@ -232,7 +232,7 @@
 
 #### Edit a game
 
-        import { updatecii } from '@aciiverse/fetcii';
+        import { fetcii } from "@aciiverse/fetcii";
 
         const   url = 'http://localhost:3000/api/games/:id', // api url
                 data: Game = {
@@ -241,7 +241,7 @@
                     release: 2011
                 };
 
-        const result = await updatecii(url, data); // fetching (async await)
+        const result = await fetcii.updatecii(url, data); // fetching (async await)
 
         if (result.err) {
             // -> error occured while fetching (frontend or backend)
@@ -259,7 +259,7 @@
 
 #### Delete a game
 
-        import { removecii } from '@aciiverse/fetcii';
+        import { fetcii } from "@aciiverse/fetcii";
 
         const   url = 'http://localhost:3000/api/games/:id'; // api url
 
@@ -284,7 +284,7 @@
 
         const url = 'http://localhost:3000/api/users/login';
 
-        const result = await createcii(url, {
+        const result = await fetcii.createcii(url, {
             username: 'ezio',
             password: 'mySecretPassword'
         });
@@ -298,7 +298,7 @@
         const data = result.data;
 
         // save data
-        users.saveData({
+        fetcii.users.saveData({
             accessToken: data.token,
             userData: data.user,
             tokenExp: data.tokenExp
@@ -318,7 +318,7 @@
             isAdmin: boolean;
         }
 
-        const data: UserData = users.getData();
+        const data: UserData = fetcii.users.getData();
 
         if (!data) return; // no data found
 
@@ -326,44 +326,44 @@
 
 -   Receive the Access Token
 
-        const token = users.getToken();
+        const token = fetcii.users.getToken();
 
         if (!token) return; // no token found
 
 -   With the token you can execute getcii(), createcii(), updatecii() or deletecii():
 -   `aciiFX` has built-in middlewares that automatically consume the token
 
-        const token = users.getToken();
+        const token = fetcii.users.getToken();
 
         if (!token) return; // no token found
 
         const url = 'http://localhost:3000/api/games',
-            result = await getcii(url, {}, token); // fetching (async await);
+            result = await fetcii.getcii(url, {}, token); // fetching (async await);
 
 #### users.deleteData()
 
 -   Delete the data you have saved
 
-        users.deleteData();
+        fetcii.users.deleteData();
 
 -   When you start the app, you want to use whether the token has expired, you can use the following
 -   It comes back whether the token has expired
 -   If you don't define any parameter, it automatically deletes the data
 
-        users.checkTokenExpired();
+        fetcii.users.checkTokenExpired();
 
     or
 
-        const expired = users.checkTokenExpired();
+        const expired = fetcii.users.checkTokenExpired();
 
     or
 
-        const expired = users.checkTokenExpired(true);
+        const expired = fetcii.users.checkTokenExpired(true);
 
     or
 
-        users.checkTokenExpired(true);
+        fetcii.users.checkTokenExpired(true);
 
 -   If the data should not be deleted:
 
-        const expired = users.checkTokenExpired(false);
+        const expired = fetcii.users.checkTokenExpired(false);
