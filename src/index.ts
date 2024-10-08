@@ -2,7 +2,7 @@ import { users as usersModule } from "./users";
 
 // export fetcii's users module
 
-export module fetcii {
+export namespace fetcii {
     // export fetcii's users module
     export const users = usersModule;
 
@@ -13,6 +13,8 @@ export module fetcii {
         GreaterEqual = "ge",
         LessThan = "lt",
         LessEqual = "le",
+        Inside = "in",
+        NotInside = "ni",
     }
 
     interface Filter {
