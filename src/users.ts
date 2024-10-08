@@ -1,4 +1,4 @@
-export module users {
+export namespace users {
     export interface UserDataType {
         [key: string]: any;
     }
