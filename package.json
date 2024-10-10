@@ -1,6 +1,6 @@
 {
   "name": "@aciiverse/fetcii",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Simple fetch module primary designed for the aciifx backend",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
