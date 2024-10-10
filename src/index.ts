@@ -1,6 +1,7 @@
 import { users as usersModule } from "./users";
 
 // export fetcii's users module
+export const users = usersModule;
 
 export namespace fetcii {
     // export fetcii's users module
