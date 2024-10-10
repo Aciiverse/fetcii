@@ -44,9 +44,11 @@
 
         npm i @aciiverse/fetcii
 
-2.  Now you can simply import fetcii:
+2.  Now you can simply import fetcii eg.:
 
         import { fetcii } from "@aciiverse/fetcii";
+
+    With this you see all functions and modules within fetcii. You can also import modules directly, for example: `import { users } from "@aciiverse/fetcii";`
 
 ## Develop
 
@@ -298,7 +300,7 @@
         const data = result.data;
 
         // save data
-        fetcii.users.saveData({
+        users.saveData({
             accessToken: data.token,
             userData: data.user,
             tokenExp: data.tokenExp
@@ -318,7 +320,7 @@
             isAdmin: boolean;
         }
 
-        const data: UserData = fetcii.users.getData();
+        const data: UserData = users.getData();
 
         if (!data) return; // no data found
 
@@ -326,14 +328,14 @@
 
 -   Receive the Access Token
 
-        const token = fetcii.users.getToken();
+        const token = users.getToken();
 
         if (!token) return; // no token found
 
 -   With the token you can execute getcii(), createcii(), updatecii() or deletecii():
 -   `aciiFX` has built-in middlewares that automatically consume the token
 
-        const token = fetcii.users.getToken();
+        const token = users.getToken();
 
         if (!token) return; // no token found
 
@@ -344,26 +346,26 @@
 
 -   Delete the data you have saved
 
-        fetcii.users.deleteData();
+        users.deleteData();
 
 -   When you start the app, you want to use whether the token has expired, you can use the following
 -   It comes back whether the token has expired
 -   If you don't define any parameter, it automatically deletes the data
 
-        fetcii.users.checkTokenExpired();
+        users.checkTokenExpired();
 
     or
 
-        const expired = fetcii.users.checkTokenExpired();
+        const expired = users.checkTokenExpired();
 
     or
 
-        const expired = fetcii.users.checkTokenExpired(true);
+        const expired = users.checkTokenExpired(true);
 
     or
 
-        fetcii.users.checkTokenExpired(true);
+        users.checkTokenExpired(true);
 
 -   If the data should not be deleted:
 
-        const expired = fetcii.users.checkTokenExpired(false);
+        const expired = users.checkTokenExpired(false);
