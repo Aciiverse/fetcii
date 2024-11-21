@@ -1,5 +1,16 @@
 import { users as usersModule } from "./users";
 
+export enum CompareOperator {
+    Equal = "eq",
+    NotEqual = "neq",
+    GreaterThan = "gt",
+    GreaterEqual = "ge",
+    LessThan = "lt",
+    LessEqual = "le",
+    Inside = "in",
+    NotInside = "ni",
+}
+
 // export fetcii's users module
 export const users = usersModule;
 
@@ -7,27 +18,19 @@ export namespace fetcii {
     // export fetcii's users module
     export const users = usersModule;
 
-    export enum CompareOperator {
-        Equal = "eq",
-        NotEqual = "neq",
-        GreaterThan = "gt",
-        GreaterEqual = "ge",
-        LessThan = "lt",
-        LessEqual = "le",
-        Inside = "in",
-        NotInside = "ni",
-    }
-
     interface Filter {
-        property: string;
         operator: CompareOperator;
         value: any;
     }
-    interface Filters {
-        filters: Filter[];
-        and?: boolean;
+
+    interface FiltersType {
+        [key: string]: FilterContent;
     }
-    export type FilterType = Filter | Filters;
+
+    interface FilterContent {
+        filters: Filter[];
+        and: boolean;
+    }
 
     interface OrderBy {
         property: string;
@@ -36,7 +39,7 @@ export namespace fetcii {
     export type OrderByType = OrderBy | OrderBy[];
 
     export interface GetOptions {
-        filters?: FilterType;
+        filters?: FiltersType;
         select?: string[];
         orderBy?: OrderByType;
         top?: number;
@@ -47,6 +50,65 @@ export namespace fetcii {
         response?: Response;
         data?: any;
         err?: Error;
+    }
+
+    export class FilterCollection {
+        constructor() {}
+
+        protected filters: FiltersType = {};
+
+        /**
+         * @method gets all filters
+         * @author Flowtastisch
+         * @memberof Aciiverse
+         * @date 20.11.2024
+         */
+        public getAllFilters() {
+            return this.filters;
+        }
+
+        /**
+         * @method gets a filter by property
+         * @param {string} property key
+         * @author Flowtastisch
+         * @memberof Aciiverse
+         * @date 20.11.2024
+         */
+        public getFilter(property: string) {
+            return this.filters[property];
+        }
+
+        /**
+         * @method adds a filter to the filter (replaces it if it already exists)
+         * @param {string} property to filter
+         * @param {Filter[]} filters array
+         * @param {boolean} and? optional -> standard is `true`
+         * @author Flowtastisch
+         * @memberof Aciiverse
+         * @date 20.11.2024
+         */
+        public add(property: string, filters: Filter[], and: boolean = true) {
+            this.filters[property] = {
+                filters: filters,
+                and: and,
+            };
+        }
+
+        /**
+         * @method removes a filter by property
+         * @param {string} property key
+         * @author Flowtastisch
+         * @memberof Aciiverse
+         * @date 20.11.2024
+         */
+        public remove(property: string) {
+            if (!this.filters[property]) {
+                // -> property doesn't exist
+                return;
+            }
+
+            delete this.filters[property];
+        }
     }
 
     /**
@@ -360,3 +422,6 @@ export namespace fetcii {
         }
     }
 }
+
+// export FilterCollection
+export const FilterCollection = fetcii.FilterCollection;

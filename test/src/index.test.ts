@@ -1,5 +1,5 @@
 import { describe, it } from "node:test";
-import { fetcii } from "@aciiverse/fetcii";
+import { CompareOperator, fetcii, FilterCollection } from "@aciiverse/fetcii";
 import assert = require("node:assert");
 
 interface BasicResponse {
@@ -205,13 +205,15 @@ describe("getcii game orderBy id desc", () => {
 describe("getcii game filtered on release in 2020", () => {
     it("founded", async () => {
         const result = await fetcii.getcii(`${baseUrl}/games`),
-            filteredResult = await fetcii.getcii(`${baseUrl}/games`, {
-                filters: {
-                    property: "release",
-                    operator: fetcii.CompareOperator.Equal,
-                    value: "2020",
-                },
-            });
+            filters = new FilterCollection();
+
+        filters.add("release", [
+            { operator: CompareOperator.Equal, value: "2020" },
+        ]);
+
+        const filteredResult = await fetcii.getcii(`${baseUrl}/games`, {
+            filters: filters.getAllFilters(),
+        });
 
         assert(!filteredResult.err, "response is valid (!err)");
         assert(filteredResult.response?.ok, "response is valid (response.ok)");
