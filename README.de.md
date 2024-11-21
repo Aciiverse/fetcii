@@ -123,63 +123,46 @@
 
 -   Alle Spiele mit der id 1:
 
-          const filter: FilterType = {
-              operator: fetcii.CompareOperator.Equal,
-              property: 'id',
-              value: 1
-          };
+        const filters = new FilterCollection();
+
+        filters.add("id", [
+            { operator: CompareOperator.Equal, value: 1 },
+        ]);
 
 -   Alle Spiele namens 'Minecraft' **oder** 'Portal 2':
 
-          const filter: FilterType = {
-              filters: [
-                  {
-                      operator: fetcii.CompareOperator.Equal,
-                      property: 'title',
-                      value: 'Minecraft'
-                  },
-                  {
-                      operator: fetcii.CompareOperator.Equal,
-                      property: 'title',
-                      value: 'Portal 2'
-                  }
-              ],
-              and: false
-          };
+        const filters = new FilterCollection();
 
--   Alle Spiele namens 'Minecraft' **oder** zwischen 2020 **und** 2028 erschienen
+        filters.add(
+            "title",
+            [
+                { operator: CompareOperator.Equal, value: "Minecraft" },
+                { operator: CompareOperator.Equal, value: "Portal 2" },
+            ],
+            false
+        );
 
-          const filter: FilterType = {
-              filters: [
-                  {
-                      filters: [
-                          {
-                              operator: fetcii.CompareOperator.GreaterEqual,
-                              property: 'release',
-                              value: 2020
-                          },
-                          {
-                              operator: fetcii.CompareOperator.LessEqual,
-                              property: 'release',
-                              value: 2028
-                          }
-                      ],
-                      and: true
-                  },
-                  {
-                      operator: fetcii.CompareOperator.Equal,
-                      property: 'title',
-                      value: 'Minecraft'
-                  }
-              ],
-              and: false
-          };
+-   Alle Spiele namens 'Minecraft' **oder** (Logik in aciiFX) zwischen 2020 **und** 2028 erschienen
+
+        const filters = new FilterCollection();
+
+        filters.add("title", [
+                { operator: CompareOperator.Equal, value: "Minecraft" },
+        ]);
+        filters.add(
+            "release",
+            [
+                { operator: CompareOperator.GreaterEqual, value: 2020 },
+                { operator: CompareOperator.LessEqual, value: 2028 },
+            ],
+            false
+        );
 
 -   Filter zuweisen:
 
-          const result = await fetcii.getcii(url, {
-              filter: filters // set filter
-          });
+        const result = await fetcii.getcii(url, {
+            filters: filters.getAllFilters(), // set filters
+        });
 
 -   Der Queryparameter kommt als `$filters` an
 

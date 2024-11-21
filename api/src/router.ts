@@ -112,7 +112,9 @@ router.get("/games", async (req: express.Request, res: express.Response) => {
 
     // Filter handle
     if (query.filters) {
-        games = getFilteredArray(games, query.filters);
+        games = games.filter(
+            (e) => e.release === (query.filters as any).release.filters[0].value
+        );
     }
 
     // OrderBy handle
@@ -154,32 +156,35 @@ router.get("/games", async (req: express.Request, res: express.Response) => {
  * @memberof Aciiverse
  * @date 24.08.2024
  */
-router.get("/games/:id", async (req: express.Request, res: express.Response) => {
-    const gameId = parseInt(req.params.id),
-        data = await getData();
+router.get(
+    "/games/:id",
+    async (req: express.Request, res: express.Response) => {
+        const gameId = parseInt(req.params.id),
+            data = await getData();
 
-    if (!data || !data.games) {
-        // -> dummy data not founded
-        return res.status(404).send({
-            message: "No data founded",
+        if (!data || !data.games) {
+            // -> dummy data not founded
+            return res.status(404).send({
+                message: "No data founded",
+            });
+        }
+
+        const games = data.games,
+            game = games.find((e) => e.id === gameId);
+
+        if (!game) {
+            // -> old game not exists
+            return res.status(404).send({
+                message: "Game not exists",
+            });
+        }
+
+        res.status(200).send({
+            message: "Success",
+            data: game,
         });
     }
-
-    const games = data.games,
-        game = games.find((e) => e.id === gameId);
-
-    if (!game) {
-        // -> old game not exists
-        return res.status(404).send({
-            message: "Game not exists",
-        });
-    }
-
-    res.status(200).send({
-        message: "Success",
-        data: game,
-    });
-});
+);
 
 /**
  * @method creates a games (only handle)
@@ -194,7 +199,13 @@ router.post("/games", (req: express.Request, res: express.Response) => {
     const body: Game = req.body,
         newGame: Game = body;
 
-    if (!body.description || !body.developer || !body.developingLanguage || !body.release || !body.title) {
+    if (
+        !body.description ||
+        !body.developer ||
+        !body.developingLanguage ||
+        !body.release ||
+        !body.title
+    ) {
         // -> fields not valid
         return res.status(406).send({
             message: "Invalid data",
@@ -218,44 +229,53 @@ router.post("/games", (req: express.Request, res: express.Response) => {
  * @memberof Aciiverse
  * @date 24.08.2024
  */
-router.put("/games/:id", async (req: express.Request, res: express.Response) => {
-    const body: Omit<Game, "id"> = req.body,
-        gameId = parseInt(req.params.id),
-        data = await getData();
+router.put(
+    "/games/:id",
+    async (req: express.Request, res: express.Response) => {
+        const body: Omit<Game, "id"> = req.body,
+            gameId = parseInt(req.params.id),
+            data = await getData();
 
-    if (!data || !data.games) {
-        // -> dummy data not founded
-        return res.status(404).send({
-            message: "No data founded",
+        if (!data || !data.games) {
+            // -> dummy data not founded
+            return res.status(404).send({
+                message: "No data founded",
+            });
+        }
+
+        const games = data.games;
+
+        if (
+            !body.description ||
+            !body.developer ||
+            !body.developingLanguage ||
+            !body.release ||
+            !body.title
+        ) {
+            // -> fields not valid
+            return res.status(406).send({
+                message: "Invalid data",
+            });
+        }
+
+        const oldGame = games.find((e) => e.id === gameId);
+
+        if (!oldGame) {
+            // -> old game not exists
+            return res.status(404).send({
+                message: "Game not exists",
+            });
+        }
+
+        const returnData = body as Game;
+        returnData.id = gameId;
+
+        res.status(202).send({
+            message: "Success",
+            data: returnData,
         });
     }
-
-    const games = data.games;
-
-    if (!body.description || !body.developer || !body.developingLanguage || !body.release || !body.title) {
-        // -> fields not valid
-        return res.status(406).send({
-            message: "Invalid data",
-        });
-    }
-
-    const oldGame = games.find((e) => e.id === gameId);
-
-    if (!oldGame) {
-        // -> old game not exists
-        return res.status(404).send({
-            message: "Game not exists",
-        });
-    }
-
-    const returnData = body as Game;
-    returnData.id = gameId;
-
-    res.status(202).send({
-        message: "Success",
-        data: returnData,
-    });
-});
+);
 
 /**
  * @method deletes a games (only handle)
@@ -266,31 +286,34 @@ router.put("/games/:id", async (req: express.Request, res: express.Response) => 
  * @memberof Aciiverse
  * @date 24.08.2024
  */
-router.delete("/games/:id", async (req: express.Request, res: express.Response) => {
-    const data = await getData(),
-        gameId = parseInt(req.params.id);
+router.delete(
+    "/games/:id",
+    async (req: express.Request, res: express.Response) => {
+        const data = await getData(),
+            gameId = parseInt(req.params.id);
 
-    if (!data || !data.games) {
-        // -> dummy data not founded
-        return res.status(404).send({
-            message: "No data founded",
+        if (!data || !data.games) {
+            // -> dummy data not founded
+            return res.status(404).send({
+                message: "No data founded",
+            });
+        }
+
+        const games = data.games,
+            game = games.find((e) => e.id === gameId);
+
+        if (!game) {
+            // -> game not exists
+            return res.status(404).send({
+                message: "Game not exists",
+            });
+        }
+
+        res.status(202).send({
+            message: "Success",
         });
     }
-
-    const games = data.games,
-        game = games.find((e) => e.id === gameId);
-
-    if (!game) {
-        // -> game not exists
-        return res.status(404).send({
-            message: "Game not exists",
-        });
-    }
-
-    res.status(202).send({
-        message: "Success",
-    });
-});
+);
 
 /**
  * @async
@@ -320,7 +343,10 @@ async function getData(): Promise<Data | undefined> {
  * @memberof Aciiverse
  * @date 25.08.2024
  */
-async function getQueryParams(req: express.Request, options: GetQueryParamsOptions): Promise<GetQueryParams> {
+async function getQueryParams(
+    req: express.Request,
+    options: GetQueryParamsOptions
+): Promise<GetQueryParams> {
     const response: GetQueryParams = {};
 
     if (options.all || options.filters) {
@@ -397,7 +423,9 @@ async function getQueryParams(req: express.Request, options: GetQueryParamsOptio
  * @memberof Aciiverse
  * @date 25.08.2024
  */
-function orderResponsive(orderBy: OrderBy | OrderBy[]): (a: any, b: any) => number {
+function orderResponsive(
+    orderBy: OrderBy | OrderBy[]
+): (a: any, b: any) => number {
     return (a: any, b: any) => {
         if (!(orderBy instanceof Array)) {
             orderBy = [orderBy];
@@ -424,51 +452,6 @@ function orderResponsive(orderBy: OrderBy | OrderBy[]): (a: any, b: any) => numb
         }
         return 0;
     };
-}
-
-/**
- * @method filters the objects array
- * @param {any[]} obj object array you want to filter
- * @param {FilterType} filters that must match
- * @returns {Array<any>} filtered object array
- * @author Flowtastisch
- * @memberof Aciiverse
- * @date 25.08.2024
- */
-function getFilteredArray(obj: any[], filters: FilterType): Array<any> {
-    let filtered: any[] = obj;
-
-    if ("filters" in filters) {
-        // -> multiple filters
-        // COMING SOON
-    } else {
-        // -> single filter
-        const property = filters.property,
-            value = filters.value;
-
-        switch (filters.operator) {
-            case CompareOperator.Equal:
-                filtered = filtered.filter((e) => e[property] === value);
-                break;
-            case CompareOperator.GreaterEqual:
-                filtered = filtered.filter((e) => e[property] >= value);
-                break;
-            case CompareOperator.GreaterThan:
-                filtered = filtered.filter((e) => e[property] > value);
-                break;
-            case CompareOperator.LessEqual:
-                filtered = filtered.filter((e) => e[property] <= value);
-                break;
-            case CompareOperator.LessThan:
-                filtered = filtered.filter((e) => e[property] < value);
-                break;
-            case CompareOperator.NotEqual:
-                filtered = filtered.filter((e) => e[property] !== value);
-                break;
-        }
-    }
-
-    return filtered;
 }
 
 module.exports = router;

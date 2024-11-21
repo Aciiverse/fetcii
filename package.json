@@ -1,40 +1,42 @@
 {
-  "name": "@aciiverse/fetcii",
-  "version": "1.2.1",
-  "description": "Simple fetch module primary designed for the aciifx backend",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "repository": {
-    "url": "https://github.com/Aciiverse/fetcii.git"
-  },
-  "author": "Flowtastisch",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
-  },
-  "keywords": [
-    "fetch",
-    "api",
-    "typescript",
-    "frontend",
-    "simple",
-    "handle",
-    "acii"
-  ],
-  "scripts": {
-    "start": "node dist/index.js",
-    "build": "tsc",
-    "build:watch": "tsc --watch",
-    "test:api:": "concurrently \"tsc --watch -p api/tsconfig.json\" \"node --watch api/dist/index.js\" "
-  },
-  "files": [
-    "dist",
-    "!test",
-    "LICENCE"
-  ],
-  "devDependencies": {
-    "concurrently": "^8.2.2",
-    "express": "^4.19.2",
-    "prettier": "^3.3.3"
-  }
+    "name": "@aciiverse/fetcii",
+    "version": "1.2.2",
+    "description": "Simple fetch module primary designed for the aciifx backend",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "repository": {
+        "url": "https://github.com/Aciiverse/fetcii.git"
+    },
+    "author": "Flowtastisch",
+    "license": "MIT",
+    "publishConfig": {
+        "access": "public"
+    },
+    "keywords": [
+        "fetch",
+        "api",
+        "typescript",
+        "frontend",
+        "simple",
+        "handle",
+        "acii"
+    ],
+    "scripts": {
+        "start": "node dist/index.js",
+        "build": "tsc",
+        "build:watch": "tsc --watch",
+        "test:api:": "concurrently \"tsc --watch -p api/tsconfig.json\" \"node --watch api/dist/index.js\" "
+    },
+    "files": [
+        "dist",
+        "!test",
+        "LICENCE"
+    ],
+    "devDependencies": {
+        "@types/express": "^5.0.0",
+        "@types/node": "^22.9.1",
+        "concurrently": "^8.2.2",
+        "express": "^4.19.2",
+        "prettier": "^3.3.3"
+    }
 }
