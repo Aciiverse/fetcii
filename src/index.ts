@@ -79,7 +79,7 @@ export namespace fetcii {
         }
 
         /**
-         * @method adds a filter to the filter (replaces it if it already exists)
+         * @method adds a filter to the filter (NO filters replace -> only the and property will be replaced)
          * @param {string} property to filter
          * @param {Filter[]} filters array
          * @param {boolean} and? optional -> standard is `true`
@@ -88,6 +88,32 @@ export namespace fetcii {
          * @date 20.11.2024
          */
         public add(property: string, filters: Filter[], and: boolean = true) {
+            const content = this.filters[property];
+
+            if (!content) {
+                // -> filter NOT existing
+                this.replace(property, filters, and);
+                return;
+            }
+            const existFilters = content.filters;
+            content.filters = existFilters.concat(filters);
+            content.and = and;
+        }
+
+        /**
+         * @method replaces a filter to the filter | old filter will be **DELETED**
+         * @param {string} property to filter
+         * @param {Filter[]} filters array
+         * @param {boolean} and? optional -> standard is `true`
+         * @author Flowtastisch
+         * @memberof Aciiverse
+         * @date 21.11.2024
+         */
+        public replace(
+            property: string,
+            filters: Filter[],
+            and: boolean = true
+        ) {
             this.filters[property] = {
                 filters: filters,
                 and: and,
